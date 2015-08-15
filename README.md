@@ -1,25 +1,25 @@
-Device Tree For Samsung Galaxy S3 Neo
+Device Tree For Samsung Gear S
 ===================================== 
 
 | Basic   | Spec Sheet                  |
 | -------:|:--------------------------- |
-| CPU     | Quad-core 1.4 GHz Cortex-A7 | 
+| CPU     | Quad-core 1.2 GHz Cortex-A7 | 
 | CHIPSET | Qualcomm Snapdragon 400 |
 | GPU     | Adreno 305 |
-| Memory  | 1.5GB RAM |
-| Shipped Android Version | 4.4.2 |
-| Storage | 16GB |
-| MicroSD | Up to 64GB |
-| Battery | 2100 mAh |
-| Display | 5.38 x 2.78 x 0.34 in |
-| Camera  | 8 MP, 3264 x 2448 pixels |
+| Memory  | 0.5GB RAM |
+| Shipped | Tizen |
+| Storage | 4GB |
+| MicroSD | Not available |
+| Battery | 350 mAh ?? |
+| Display | 360x48px |
+| Camera  | Not available |
 
 
-![Galaxy S3 Neo](http://cdn2.gsmarena.com/vv/pics/samsung/samsung-i9301l-galaxy-s3-neo.jpg "Galaxy S3 Neo")
+![Gear S](http://cdn2.gsmarena.com/vv/bigpic/samsung-gear-s.jpg "Gear S")
 
-This branch is for building CyanogenMod 12.0 Firmware.
+This branch is for building CyanogenMod 12.1 Firmware.
 
 TODO:
 =======
 
-	- Fix NFC
+	- A lot ;)

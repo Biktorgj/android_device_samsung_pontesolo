@@ -26,17 +26,10 @@ mm.enable.smoothstreaming=true
 ro.qc.sdk.audio.fluencetype=none
 use.voice.path.for.pcm.voip=false
 
-# Bluetooth
-ro.bluetooth.hfp.ver=1.6
-ro.qualcomm.bt.hci_transport=smd
-
-# Camera
-camera2.portability.force_api=1
-
 # Display
 debug.composition.type=c2d 
 ro.opengles.version=196608
-ro.sf.lcd_density=320
+ro.sf.lcd_density=200
 
 # GPS
 persist.gps.qc_nlp_in_use=1
@@ -61,3 +54,6 @@ ro.qc.sdk.sensors.gestures=true
 
 # Wi-Fi
 wifi.interface=wlan0
+
+# Enable Soft-keys
+qemu.hw.mainkeys=1

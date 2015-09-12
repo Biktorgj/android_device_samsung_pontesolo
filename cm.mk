@@ -19,5 +19,5 @@ $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 $(call inherit-product, device/samsung/pontesolo/full_pontesolo.mk)
 
 # Release name
-PRODUCT_RELEASE_NAME := GT-I9301I
+PRODUCT_RELEASE_NAME := SM-R750
 PRODUCT_NAME := cm_pontesolo

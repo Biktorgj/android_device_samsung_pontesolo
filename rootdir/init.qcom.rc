@@ -66,7 +66,7 @@ on init
     symlink /storage/usbdisk /mnt/usbdisk
 
 on fs
-    mount_all fstab.ponte-solo
+    mount_all fstab.qcom
 
     # Support Preload install apks
     # mkdir /preload 0771 system system
@@ -234,10 +234,16 @@ on early-boot
     setrlimit 8 67108864 67108864
 
     # Allow subsystem (modem etc) debugging
-    write /sys/module/subsystem_restart/parameters/enable_debug ${persist.sys.ssr.enable_debug}
+    write /sys/module/subsystem_restart/parameters/enable_debug 1
 
 on boot
     mount debugfs /sys/kernel/debug /sys/kernel/debug
+    # bring CPUs online
+    write /sys/module/msm_thermal/core_control/enabled 0
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu2/online 1
+    write /sys/devices/system/cpu/cpu3/online 1
+    write /sys/module/msm_thermal/core_control/enabled 1
 
     # Permissions for bluetooth
     mkdir /efs/bluetooth 0775 radio system
@@ -260,6 +266,20 @@ on boot
     mkdir /dev/socket/qmux_gps 0770 gps gps
     chmod 2770 /dev/socket/qmux_gps
 
+    #hsic
+    chown system system /sys/bus/platform/drivers/msm_hsic_host/bind
+    chown system system /sys/bus/platform/drivers/msm_hsic_host/unbind
+    chmod 0200 /sys/bus/platform/drivers/msm_hsic_host/bind
+    chmod 0200 /sys/bus/platform/drivers/msm_hsic_host/unbind
+
+    # Subsytem Restart
+    #adsp
+    write /sys/bus/msm_subsys/devices/subsys0/restart_level "related"
+    #modem
+    write /sys/bus/msm_subsys/devices/subsys1/restart_level "related"
+    #venus
+    write /sys/bus/msm_subsys/devices/subsys2/restart_level "related"
+	
     # Modem requires this
     chown root radio /proc/cmdline
     chmod 0644 /proc/cmdline
@@ -622,7 +642,7 @@ service rfs_access /system/bin/rfs_access
 service rmt_storage /system/bin/rmt_storage
     class core
     user root
-    disabled
+	group system
 
 on property:ro.boot.emmc=true
     start rfs_access

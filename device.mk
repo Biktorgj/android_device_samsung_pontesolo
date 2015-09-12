@@ -52,10 +52,10 @@ PRODUCT_PACKAGES += \
     init.ponte-solo.bt.sh
 
 PRODUCT_PACKAGES += \
-    fstab.ponte-solo \
-    init.ponte-solo.rc \
-    init.ponte-solo.usb.rc \
-    ueventd.ponte-solo.rc
+    fstab.qcom \
+    init.qcom.rc \
+    init.qcom.usb.rc \
+    ueventd.qcom.rc
 
 # Thermal
 PRODUCT_COPY_FILES += \

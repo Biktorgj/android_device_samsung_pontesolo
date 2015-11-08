@@ -85,7 +85,8 @@ on fs
     mount vfat /dev/block/platform/msm_sdcc.1/by-name/modem /firmware-modem ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
     write /sys/kernel/boot_adsp/boot 1
     setprop qcom.audio.init complete
-
+	# Start SWAP
+	start swap-start
     
 on post-fs-data
     # We will remap this as /mnt/sdcard with the sdcard fuse tool

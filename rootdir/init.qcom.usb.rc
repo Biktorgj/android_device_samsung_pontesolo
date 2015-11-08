@@ -34,7 +34,7 @@ on init
     chmod 0660 /sys/class/android_usb/android0/terminal_version
 
 on charger
-    setprop sys.usb.config mass_storage
+    setprop sys.usb.config mtp,adb
 
 on fs
     mkdir /dev/usb-ffs 0770 shell shell
@@ -56,11 +56,6 @@ on property:sys.usb.config=mtp
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
 
-on property:sys.usb.config=none
-    stop adbd
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/bDeviceClass 0
-
 on property:sys.usb.config=mtp,adb
     stop adbd
     write /sys/class/android_usb/android0/enable 0
@@ -70,6 +65,7 @@ on property:sys.usb.config=mtp,adb
     write /sys/class/android_usb/android0/functions mtp,adb
     write /sys/class/android_usb/android0/enable 1
     start adbd
+	setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=adb
     stop adbd
@@ -78,8 +74,9 @@ on property:sys.usb.config=adb
     write /sys/class/android_usb/android0/idProduct 6860
     write /sys/class/android_usb/android0/f_acm/instances 1
     write /sys/class/android_usb/android0/functions adb
-    write /sys/class/android_usb/android0/enable ${service.adb.root}
+    write /sys/class/android_usb/android0/enable 1
     start adbd
+	setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=ptp
     write /sys/class/android_usb/android0/enable 0

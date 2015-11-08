@@ -21,7 +21,7 @@ use.voice.path.for.pcm.voip=false
 # Display
 debug.composition.type=c2d 
 ro.opengles.version=196608
-ro.sf.lcd_density=180
+ro.sf.lcd_density=200
 
 # GPS
 persist.gps.qc_nlp_in_use=1
@@ -39,8 +39,6 @@ persist.data.netmgrd.qos.enable=true
 persist.radio.add_power_save=1
 
 # Sensors
-ro.qc.sdk.gestures.camera=false
-ro.qc.sdk.camera.facialproc=false
 ro.qc.sdk.sensors.gestures=true
 
 # Wi-Fi

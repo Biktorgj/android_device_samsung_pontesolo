@@ -755,7 +755,7 @@ on property:init.svc.macloader=stopped
     chown system root /data/.rev
     chmod 0664 /data/.rev
 
-service wifi-crda /system/bin/sh /system/etc/init.crda.sh
+service swap-start /system/bin/sh /system/etc/swap.sh
     class late_start
     user root
     disabled

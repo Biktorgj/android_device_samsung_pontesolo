@@ -30,6 +30,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/audio/mixer_paths.xml:system/etc/mixer_paths.xml
 
+
 # Doze
 PRODUCT_PACKAGES += \
     SamsungDoze
@@ -41,6 +42,10 @@ PRODUCT_PACKAGES += \
 # Media
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
+
+# SWAP create-activate script
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/swap.sh:system/etc/swap.sh
 
 # Permissions
 PRODUCT_COPY_FILES += \

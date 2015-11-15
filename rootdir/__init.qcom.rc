@@ -424,18 +424,6 @@ on boot
     mkdir /dev/bus/ 755 root root
     mkdir /dev/bus/usb 755 root root
 
-
-   # SensorHub
-    chown system radio /sys/class/sensors/ssp_sensor/enable
-    chown system radio /sys/class/sensors/ssp_sensor/mcu_rev
-    chown system radio /sys/class/sensors/ssp_sensor/mcu_name
-    chown system radio /sys/class/sensors/ssp_sensor/mcu_test
-    chown system radio /sys/class/sensors/ssp_sensor/mcu_reset
-    chown system radio /sys/class/sensors/ssp_sensor/mcu_update
-    chown system radio /sys/class/sensors/ssp_sensor/mcu_sleep_test
-    chown system radio /sys/class/sensors/ssp_sensor/ori_poll_delay
-    chown system radio /sys/class/sensors/ssp_sensor/mag_poll_delay
-	
     # Accelerometer_sensor
     chown system radio /sys/class/sensors/accelerometer_sensor/raw_data
     chown system radio /sys/class/sensors/accelerometer_sensor/calibration
@@ -596,6 +584,16 @@ service charger /charger
     critical
     seclabel u:r:healthd:s0
 
+#service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
+#    class late_start
+#    group radio wifi inet
+#    disabled
+#    oneshot
+
+on property:persist.data.ds_fmc_app.mode=1
+    start ds_fmc_appd
+
+
 service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class main
     user root
@@ -606,10 +604,20 @@ service mpdecision /system/bin/mpdecision --avg_comp
     user root
     disabled
 
+service qcamerasvr /system/bin/mm-qcamera-daemon
+    class late_start
+    user camera
+    group camera system inet input graphics
+
 service qmuxd /system/bin/qmuxd
     class main
     user radio
     group radio audio bluetooth gps qcom_diag
+
+service qseecomd /system/bin/qseecomd
+    class core
+    user root
+    group root
 
 service rfs_access /system/bin/rfs_access
     class core

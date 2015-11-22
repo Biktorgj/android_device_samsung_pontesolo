@@ -1,0 +1,7 @@
+sensord system::vconf_system rwxat- ------
+sensord system::vconf_inhouse r----- ------
+sensord system::vconf_misc r----- ------
+sensord system::vconf_setting r----- ------
+sensord system::vconf_privacy r----- ------
+sensord system::vconf_multimedia r----- ------
+sensord system::vconf_network r----- ------

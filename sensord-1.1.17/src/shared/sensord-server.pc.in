@@ -1,0 +1,13 @@
+# Package Information for pkg-config
+
+prefix=@PREFIX@
+exec_prefix=@EXEC_PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@/sf_common
+
+Name: libsensord-server
+Description: Commonly used code and defintions for sensord and sensord-proprietary
+Version: @VERSION@
+Requires:
+Libs: -L${libdir} -lsensord-server
+Cflags: -I${includedir}

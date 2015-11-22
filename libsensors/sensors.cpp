@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define ALOG_TAG "Sensors"
+#define ALOG_TAG "SSP_Sensorhub"
 
 #include <hardware/sensors.h>
 #include <fcntl.h>
@@ -39,6 +39,7 @@
 #include "GyroSensor.h"
 #include "AccelSensor.h"
 #include "PressureSensor.h"
+// #include "BioHRM.h"
 
 /*****************************************************************************/
 
@@ -46,6 +47,8 @@
 
 #define LIGHT_SENSOR_POLLTIME    2000000000
 
+#define SENSOR_PATH /sys/devices/virtual/sensors
+#define SSP_PATH ssp_sensor
 
 #define SENSORS_ACCELERATION     (1<<ID_A)
 #define SENSORS_MAGNETIC_FIELD   (1<<ID_M)
@@ -66,6 +69,33 @@
 #define AKM_FTRACE 0
 #define AKM_DEBUG 0
 #define AKM_DATA 0
+
+/*
+	GEAR S:
+AK09911 3-axis Electronic Compass
+ICM20628 InvenSense
+AL3320 Optical / Light sensor Dyna Image
+LPS25H - STMicroelectronics PRESSURE
+ADPD142 Heart Rate Monitor
+UVIS25 - STMicroelectronics UV Sensor
+	
+	EXPECTED RESULT
+ Method for autodetecting all the available sensors:
+1. Parse the following directory:
+/sys/devices/virtual/sensors
+2. For each directory found, get the contents of the following files:
+NAME, VENDOR
+3. From the directory names, create an array with the available sensors
+   to build the sensor list. If you have enough to match them out, populate
+   not only the phyisical sensors but also the virtual sensors that you can
+   create from them, just like the tilt_sensor, game_rotation_vector etc.
+   
+The purpose is to have a modular Seamless Sensor Platform HAL, that can be
+more easily transplanted to other watches / phones, like the Galaxy S5, Gear 2
+or Gear S2.
+
+All these don't use IIO (IndustrialIO) devices though, but for those it would be
+easier to adapt Samsung Manta's sensor library directly */
 
 /*****************************************************************************/
 
@@ -106,6 +136,8 @@ static const struct sensor_t sSensorList[] = {
           1, SENSORS_LIGHT_HANDLE,
           SENSOR_TYPE_LIGHT, 10240.0f, 1.0f, 0.75f, 0, 0, 0, 
           SENSOR_STRING_TYPE_LIGHT, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
+		  
+		  // Missing ADPD142, UVIS25
 };
 
 
@@ -250,7 +282,7 @@ sensors_poll_context_t::~sensors_poll_context_t() {
 int sensors_poll_context_t::activate(int handle, int enabled) {
     if (!mInitialized) return -EINVAL;
     int index = handleToDriver(handle);
-    //ALOGI("Sensors: handle: %i", handle);
+    ALOGI("Sensors: handle: %i", handle);
     if (index < 0) return index;
     int err =  mSensors[index]->enable(handle, enabled);
     if (enabled && !err) {

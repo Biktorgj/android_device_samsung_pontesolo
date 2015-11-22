@@ -31,6 +31,7 @@
 
 //#define ALOG_NDEBUG 0
 
+
 /*****************************************************************************/
 
 int (*akm_is_sensor_enabled)(uint32_t sensor_type);
@@ -61,14 +62,14 @@ AkmSensor::AkmSensor()
      * creates a uinput device.
      */
     if (loadAKMLibrary() == 0) {
-        data_name = "compass_sensor";
-        data_fd = openInput("compass_sensor");
+        data_name = "geomagnetic_sensor";
+        data_fd = openInput("geomagnetic_sensor");
     }
 
     //Incase first time fails
     if(data_fd < 0){
          ALOGI("%s: retrying to open compass sensor", LOGTAG);
-         data_fd = openInput("compass_sensor");
+         data_fd = openInput("geomagnetic_sensor");
     }
 
     if(data_fd > 0){

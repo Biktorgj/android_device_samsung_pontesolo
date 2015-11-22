@@ -383,7 +383,6 @@ on boot
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
     chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
     chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-
     # Auto Brightness
     chown system system  /sys/class/backlight/panel/auto_brightness
     chmod 0660 /sys/class/backlight/panel/auto_brightness
@@ -392,22 +391,16 @@ on boot
     # LCD mdnie and panel work
     chown system system /sys/class/mdnie/mdnie/negative
     chown system media_rw /sys/class/mdnie/mdnie/accessibility
-
     chown radio system /sys/class/lcd/panel/lcd_power
     chown radio system /sys/class/lcd/panel/lcd_type
     chown radio system /sys/class/lcd/panel/power_reduce
     chown radio system /sys/class/lcd/panel/siop_enable
-
-    chown system system /sys/class/leds/lcd-backlight/brightness
-    chown system system /sys/class/leds/button-backlight/brightness
-
     chown system system /sys/kernel/ipv4/tcp_wmem_min
     chown system system /sys/kernel/ipv4/tcp_wmem_def
     chown system system /sys/kernel/ipv4/tcp_wmem_max
     chown system system /sys/kernel/ipv4/tcp_rmem_min
     chown system system /sys/kernel/ipv4/tcp_rmem_def
     chown system system /sys/kernel/ipv4/tcp_rmem_max
-
     # Adjust YUV to RGB Conversion(CSC_Conversion)
     chown system media_rw /sys/class/graphics/fb0/csc_cfg
     chmod 0660 /sys/class/graphics/fb0/csc_cfg
@@ -490,12 +483,6 @@ on boot
     chown radio system /sys/devices/platform/sec-thermistor/temperature
     chown radio system /sys/class/power_supply/battery/siop_level
     chown radio system /sys/class/power_supply/battery/test_charge_current
-
-    # NFC_NXP
-    setprop ro.nfc.port "I2C"
-    chmod 0660 /dev/pn547
-    chown nfc nfc /dev/pn547
-    symlink /dev/pn547 /dev/pn544
 
     # Permissions for Charging
     chown system radio /sys/class/power_supply/battery/batt_reset_soc
@@ -758,6 +745,9 @@ service swap-start /system/bin/sh /system/etc/swap.sh
 service netmgrd /system/bin/netmgrd
     class main
 
+service clockwork_proxy /system/bin/ClockworkProxy
+    class main
+	
 service wpa_supplicant /system/bin/wpa_supplicant \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
     -I/system/etc/wifi/wpa_supplicant_overlay.conf \

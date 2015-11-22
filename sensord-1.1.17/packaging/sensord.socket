@@ -1,0 +1,10 @@
+[Unit]
+Description=Sensor daemon socket
+
+[Socket]
+ListenStream=/tmp/sf_command_socket
+SocketMode=0777
+PassCredentials=yes
+Accept=false
+SmackLabelIPIn=*
+SmackLabelIPOut=@

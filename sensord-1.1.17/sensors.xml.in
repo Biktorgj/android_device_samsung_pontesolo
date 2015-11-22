@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SENSOR>
+	<ACCEL>
+		<MODEL id="lsm330dlc-accel">
+			<NAME value="LSM330DLC"/>
+			<VENDOR value="ST Microelectronics"/>
+			<RAW_DATA_UNIT value="1" />
+			<RESOLUTION value="12" />
+		</MODEL>
+
+		<MODEL id="LSM330">
+			<NAME value="LSM330"/>
+			<VENDOR value="ST Microelectronics"/>
+			<RAW_DATA_UNIT value="1" />
+			<RESOLUTION value="12" />
+		</MODEL>
+
+		<MODEL id="K2HH">
+			<NAME value="K2HH" />
+			<VENDOR value="ST Microelectronics"/>
+			<RAW_DATA_UNIT value="0.061"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+
+		<MODEL id="MPU6500">
+			<NAME value="MPU6500"/>
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT SM-Z910F="0.061" SM-Z9005="0.061" value="0.244"/>
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="MPU6515">
+			<NAME value="MPU6515" />
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="0.061"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+
+		<MODEL id="MPU6050">
+			<NAME value="MPU6050"/>
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="0.061"/>
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="MPU6051">
+			<NAME value="MPU6051" />
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="0.061"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+
+		<MODEL id="MPU9250">
+			<NAME value="MPU9250"/>
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="0.244" />
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="ICM20628">
+			<NAME value="ICM20628"/>
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="0.244" />
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="bma222e">
+			<NAME value="BMA222E" />
+			<VENDOR value="BOSCH"/>
+			<RAW_DATA_UNIT value="15.63"/>
+			<RESOLUTION value="8"/>
+		</MODEL>
+
+		<MODEL id="BMI160">
+			<NAME value="BMI160" />
+			<VENDOR value="Bosch"/>
+			<RAW_DATA_UNIT value="0.244"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+
+		<MODEL id="maru_sensor_accel_1">
+			<NAME value="maru_sensor_accel_1" />
+			<VENDOR value="Tizen_SDK"/>
+			<RAW_DATA_UNIT value="0.061"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+	</ACCEL>
+
+
+	<GYRO>
+		<MODEL id="lsm330dlc_gyro">
+			<NAME value="LSM330DLC"/>
+			<VENDOR value="ST Microelectronics"/>
+			<RAW_DATA_UNIT value="17.50" />
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="LSM330">
+			<NAME value="LSM330"/>
+			<VENDOR value="ST Microelectronics"/>
+			<RAW_DATA_UNIT value="17.50" />
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="MPU6500">
+			<NAME value="MPU6500"/>
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="15.26" />
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="MPU6515">
+			<NAME value="MPU6515"/>
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="15.26" />
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="MPU6050">
+			<NAME value="MPU6050"/>
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="15.26"/>
+			<RESOLUTION value="16" />
+		</MODEL>
+
+		<MODEL id="MPU6051">
+			<NAME value="MPU6051" />
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="15.26"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+
+		<MODEL id="MPU9250">
+			<NAME value="MPU9250" />
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="15.26"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+
+		<MODEL id="ICM20628">
+			<NAME value="ICM20628" />
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="61.04"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+
+		<MODEL id="BMI160">
+			<NAME value="BMI160" />
+			<VENDOR value="Bosch"/>
+			<RAW_DATA_UNIT value="61.04"/>
+			<RESOLUTION value="16"/>
+		</MODEL>
+
+		<MODEL id="maru_sensor_gyro_1">
+			<NAME value="maru_sensor_gyro_1" />
+			<VENDOR value="Tizen_SDK"/>
+			<RAW_DATA_UNIT value="1000"/>
+			<RESOLUTION value="16"/>
+			<MIN_RANGE value="-573"/>
+			<MAX_RANGE value="573"/>
+		</MODEL>
+	</GYRO>
+
+	<PROXI>
+		<MODEL id="taos">
+			<NAME value="TMD27723" />
+			<VENDOR value="TAOS"/>
+		</MODEL>
+
+		<MODEL id="TMD3782">
+			<NAME value="TMD3782" />
+			<VENDOR value="TAOS"/>
+		</MODEL>
+
+		<MODEL id="gp2a">
+			<NAME value="GP2AP020" />
+			<VENDOR value="Sharp"/>
+		</MODEL>
+
+		<MODEL id="gp2ap002s">
+			<NAME value="GP2AP002S" />
+			<VENDOR value="Sharp"/>
+		</MODEL>
+
+		<MODEL id="CM36651">
+			<NAME value="CM36651" />
+			<VENDOR value="Capella"/>
+		</MODEL>
+
+		<MODEL id="MAX88922">
+			<NAME value="MAX88922" />
+			<VENDOR value="MAXIM"/>
+		</MODEL>
+
+		<MODEL id="maru_sensor_proxi_1">
+			<NAME value="maru_sensor_proxi_1" />
+			<VENDOR value="Tizen_SDK"/>
+		</MODEL>
+	</PROXI>
+
+	<LIGHT>
+		<MODEL id="taos">
+			<NAME value="TMD27723" />
+			<VENDOR value="TAOS"/>
+		</MODEL>
+
+		<MODEL id="TMD3782">
+			<NAME value="TMD3782" />
+			<VENDOR value="TAOS"/>
+		</MODEL>
+
+		<MODEL id="gp2a">
+			<NAME value="GP2AP020" />
+			<VENDOR value="Sharp"/>
+		</MODEL>
+
+		<MODEL id="CM36651">
+			<NAME value="CM36651" />
+			<VENDOR value="Capella"/>
+		</MODEL>
+
+		<MODEL id="MAX88922">
+			<NAME value="MAX88922" />
+			<VENDOR value="MAXIM"/>
+		</MODEL>
+
+		<MODEL id="AL3320">
+			<NAME value="AL3320" />
+			<VENDOR value="LITEON"/>
+		</MODEL>
+
+		<MODEL id="BH1733">
+			<NAME value="BH1733" />
+			<VENDOR value="ROHM"/>
+		</MODEL>
+
+		<MODEL id="maru_sensor_light_1">
+			<NAME value="maru_sensor_light_1" />
+			<VENDOR value="Tizen_SDK"/>
+		</MODEL>
+	</LIGHT>
+
+	<MAGNETIC>
+		<MODEL id="AK8975C">
+			<NAME value="AK8975C" />
+			<VENDOR value="AKM"/>
+			<RAW_DATA_UNIT value="0.06"/>
+			<MIN_RANGE value="-1200"/>
+			<MAX_RANGE value="1200"/>
+		</MODEL>
+
+		<MODEL id="AK09911C">
+			<NAME value="AK09911C" />
+			<VENDOR value="AKM"/>
+			<RAW_DATA_UNIT value="0.06"/>
+			<MIN_RANGE value="-4900"/>
+			<MAX_RANGE value="4900"/>
+		</MODEL>
+
+		<MODEL id="MPU9250">
+			<NAME value="MPU9250" />
+			<VENDOR value="Invensense"/>
+			<RAW_DATA_UNIT value="1.0"/>
+			<MIN_RANGE value="-4800"/>
+			<MAX_RANGE value="4800"/>
+		</MODEL>
+
+		<MODEL id="YAS537">
+			<NAME value="YAS537" />
+			<VENDOR value="Yamaha"/>
+			<RAW_DATA_UNIT value="0.3"/>
+			<MIN_RANGE value="-4800"/>
+			<MAX_RANGE value="4800"/>
+		</MODEL>
+
+		<MODEL id="maru_sensor_geo_1">
+			<NAME value="maru_sensor_geo_1" />
+			<VENDOR value="Tizen_SDK"/>
+			<RAW_DATA_UNIT value="0.6"/>
+			<RESOLUTION value="14"/>
+			<MIN_RANGE value="-2000"/>
+			<MAX_RANGE value="2000"/>
+		</MODEL>
+	</MAGNETIC>
+
+	<PEDO>
+		<MODEL id="MPU6051">
+			<NAME value="MPU6051" />
+			<VENDOR value="Invensense"/>
+		</MODEL>
+
+		<MODEL id="MPU6500">
+			<NAME value="MPU6500" />
+			<VENDOR value="Invensense"/>
+		</MODEL>
+
+		<MODEL id="MPU6515">
+			<NAME value="MPU6515" />
+			<VENDOR value="Invensense"/>
+		</MODEL>
+	</PEDO>
+
+	<FLAT>
+		<MODEL id="MPU6051">
+			<NAME value="MPU6051" />
+			<VENDOR value="Invensense"/>
+		</MODEL>
+
+		<MODEL id="MPU6500">
+			<NAME value="MPU6500" />
+			<VENDOR value="Invensense"/>
+		</MODEL>
+
+		<MODEL id="MPU6515">
+			<NAME value="MPU6515" />
+			<VENDOR value="Invensense"/>
+		</MODEL>
+	</FLAT>
+
+	<BIO>
+		<MODEL id="ADPD142">
+			<NAME value="ADPD142" />
+			<VENDOR value="ANALOG DEVICES"/>
+			<READER SM-Z910F="adi" value="standard"/>
+		</MODEL>
+
+		<MODEL id="ADPD142RI">
+			<NAME value="ADPD142RI" />
+			<VENDOR value="ANALOG DEVICES"/>
+			<READER SM-Z910F="adi" value="standard"/>
+		</MODEL>
+
+		<MODEL id="AD45251">
+			<NAME value="AD45251" />
+			<VENDOR value="ANALOG DEVICES"/>
+			<READER SM-Z910F="adi" value="standard"/>
+		</MODEL>
+	</BIO>
+
+	<BIO_HRM>
+		<MODEL id="ADPD142">
+			<NAME value="ADPD142" />
+			<VENDOR value="ANALOG DEVICES"/>
+			<RAW_DATA_UNIT value="1"/>
+		</MODEL>
+
+		<MODEL id="ADPD142RI">
+			<NAME value="ADPD142RI" />
+			<VENDOR value="ANALOG DEVICES"/>
+			<RAW_DATA_UNIT value="1"/>
+		</MODEL>
+
+		<MODEL id="AD45251">
+			<NAME value="AD45251" />
+			<VENDOR value="ANALOG DEVICES"/>
+			<RAW_DATA_UNIT value="1"/>
+		</MODEL>
+
+		<MODEL id="maru_sensor_hrm_1">
+			<NAME value="maru_sensor_hrm_1" />
+			<VENDOR value="Tizen_SDK"/>
+			<RAW_DATA_UNIT value="0.1"/>
+		</MODEL>
+	</BIO_HRM>
+
+	<PRESSURE>
+		<MODEL id="LPS25H">
+			<NAME value="LPS25H" />
+			<VENDOR value="ST Microelectronics"/>
+			<RAW_DATA_UNIT value="0.000244"/>
+			<MIN_RANGE value="260"/>
+			<MAX_RANGE value="1260"/>
+			<RESOLUTION value="1"/>
+			<TEMPERATURE_RESOLUTION value="0.002083"/>
+			<TEMPERATURE_OFFSET value="42.5"/>
+		</MODEL>
+		<MODEL id="LPS331">
+			<NAME value="LPS331" />
+			<VENDOR value="ST Microelectronics"/>
+			<RAW_DATA_UNIT value="0.000244"/>
+			<MIN_RANGE value="260"/>
+			<MAX_RANGE value="1260"/>
+			<RESOLUTION value="1"/>
+			<TEMPERATURE_RESOLUTION value="0.002083"/>
+			<TEMPERATURE_OFFSET value="42.5"/>
+		</MODEL>
+		<MODEL id="maru_sensor_pressure_1">
+			<NAME value="maru_sensor_pressure_1" />
+			<VENDOR value="Tizen_SDK"/>
+			<RAW_DATA_UNIT value="0.0193"/>
+			<MIN_RANGE value="260"/>
+			<MAX_RANGE value="1260"/>
+			<RESOLUTION value="1"/>
+			<TEMPERATURE_RESOLUTION value="0.05"/>
+			<TEMPERATURE_OFFSET value="0"/>
+		</MODEL>
+	</PRESSURE>
+
+	<ROTATION_VECTOR>
+		<MODEL id="MPU6500">
+			<NAME value="MPU6500" />
+			<VENDOR value="Invensense"/>
+		</MODEL>
+
+		<MODEL id="MPU9250">
+			<NAME value="MPU9250" />
+			<VENDOR value="Invensense"/>
+		</MODEL>
+
+		<MODEL id="AK09911C">
+			<NAME value="AK09911C" />
+			<VENDOR value="AKM"/>
+		</MODEL>
+
+		<MODEL id="maru_sensor_rotation_vector_1">
+			<NAME value="maru_sensor_rotation_vector_1" />
+			<VENDOR value="Tizen_SDK"/>
+		</MODEL>
+	</ROTATION_VECTOR>
+
+	<PIR>
+		<MODEL id="EKMC1601111">
+			<NAME value="EKMC1601111" />
+			<VENDOR value="PANASONIC"/>
+		</MODEL>
+		<MODEL id="PYD1798">
+			<NAME value="PYD1798" />
+			<VENDOR value="PYRO-ELECTRIC"/>
+		</MODEL>
+	</PIR>
+
+	<PIR_LONG>
+		<MODEL id="EKMC1603111">
+			<NAME value="EKMC1603111" />
+			<VENDOR value="PANASONIC"/>
+		</MODEL>
+		<MODEL id="PYD1798">
+			<NAME value="PYD1798" />
+			<VENDOR value="PYRO-ELECTRIC"/>
+		</MODEL>
+	</PIR_LONG>
+
+	<TEMPERATURE>
+		<MODEL id="SHTC1">
+			<NAME value="SHTC1" />
+			<VENDOR value="SENSIRION"/>
+			<RAW_DATA_UNIT value="0.01"/>
+			<RESOLUTION value="1"/>
+		</MODEL>
+	</TEMPERATURE>
+
+	<HUMIDITY>
+		<MODEL id="SHTC1">
+			<NAME value="SHTC1" />
+			<VENDOR value="SENSIRION"/>
+			<RAW_DATA_UNIT value="0.01"/>
+			<MIN_RANGE value="-10"/>
+			<MAX_RANGE value="110"/>
+			<RESOLUTION value="1"/>
+		</MODEL>
+	</HUMIDITY>
+
+	<ULTRAVIOLET>
+		<MODEL id="UVIS25">
+			<NAME value="UVIS25" />
+			<VENDOR value="STM"/>
+			<RAW_DATA_UNIT value="0.0625"/>
+			<MIN_RANGE value="0"/>
+			<MAX_RANGE value="15"/>
+		</MODEL>
+		<MODEL id="maru_sensor_uv_1">
+			<NAME value="maru_sensor_uv_1" />
+			<VENDOR value="Tizen_SDK"/>
+			<RAW_DATA_UNIT value="0.1"/>
+			<MIN_RANGE value="0"/>
+			<MAX_RANGE value="15"/>
+		</MODEL>
+	</ULTRAVIOLET>
+
+	<DUST>
+		<MODEL id="GP2Y1023AU0F">
+			<NAME value="GP2Y1023AU0F" />
+			<VENDOR value="SHARP"/>
+			<RAW_DATA_UNIT value="1"/>
+		</MODEL>
+	</DUST>
+</SENSOR>

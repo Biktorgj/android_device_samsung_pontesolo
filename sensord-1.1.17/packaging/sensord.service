@@ -1,0 +1,12 @@
+[Unit]
+Description=Sensor Daemon
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/sensord
+Restart=always
+RestartSec=0
+MemoryLimit=20M
+
+[Install]
+WantedBy=multi-user.target

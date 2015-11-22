@@ -1,0 +1,52 @@
+<PLUGIN>
+	<HAL>
+		<MODULE path = "/usr/lib/sensord/libaccel_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libgyro_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libuncal_gyro_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libgeo_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libuncal_geo_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libproxi_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/liblight_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libpressure_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libbio_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libbio_hrm_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libcontext_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/librv_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/librv_raw_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libpir_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libpir_long_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libtemperature_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libhumidity_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libultraviolet_sensor_hal.so"/>
+		<MODULE path = "/usr/lib/sensord/libdust_sensor_hal.so"/>
+	</HAL>
+
+	<SENSOR>
+		<MODULE path = "/usr/lib/sensord/libaccel_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libgyro_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libuncal_gyro_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libgeo_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libuncal_geo_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libproxi_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/liblight_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libpressure_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libbio_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libbio_hrm_phy_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libbio_hrm_virt_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libcontext_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libauto_rotation_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libmotion_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libpir_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libpir_long_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libtemperature_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libhumidity_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libultraviolet_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/liborientation_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libgravity_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/liblinear_accel_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/librv_sensor.so"/>
+		<MODULE path = "/usr/lib/sensord/libdust_sensor.so"/>
+	</SENSOR>
+
+
+</PLUGIN>

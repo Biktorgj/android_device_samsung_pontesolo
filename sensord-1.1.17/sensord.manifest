@@ -1,0 +1,15 @@
+<manifest>
+	<define>
+		<domain name="sensord" />
+		<provide>
+			<label name="sensord::server" />
+			<label name="sensord::bio" />
+		</provide>
+	</define>
+	<request>
+		<domain name="sensord" />
+	</request>
+	<assign>
+		<filesystem path="/etc/rc.d/init.d/sfsvc" label="_" exec_label="none" />
+	</assign>
+</manifest>

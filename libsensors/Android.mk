@@ -33,11 +33,11 @@ LOCAL_SRC_FILES := 						\
 				SensorBase.cpp			\
 				LightSensor.cpp			\
 				ProximitySensor.cpp		\
-				AkmSensor.cpp                   \
-				GyroSensor.cpp                  \
-                                InputEventReader.cpp            \
-                                AccelSensor.cpp                 \
-                                PressureSensor.cpp
+				GeoMagneticSensor.cpp   \
+				GyroSensor.cpp          \
+                InputEventReader.cpp            \
+                AccelSensor.cpp                 \
+                PressureSensor.cpp
 
 LOCAL_SHARED_LIBRARIES := liblog libcutils libdl
 LOCAL_PRELINK_MODULE := false

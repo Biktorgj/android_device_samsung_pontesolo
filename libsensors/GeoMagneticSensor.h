@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef ANDROID_AKM_SENSOR_H
-#define ANDROID_AKM_SENSOR_H
 
 #include <stdint.h>
 #include <errno.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
-
 
 #include "sensors.h"
 #include "SensorBase.h"
@@ -31,36 +28,29 @@
 
 struct input_event;
 
-class AkmSensor : public SensorBase {
-public:
-            AkmSensor();
-    virtual ~AkmSensor();
-
-    enum {
+class MagneticSensor : public SensorBase {
+	    enum {
         Accelerometer   = 0,
         MagneticField   = 1,
         Orientation     = 2,
         numSensors
     };
-
-    virtual int setDelay(int32_t handle, int64_t ns);
-    virtual int enable(int32_t handle, int enabled);
-    virtual int readEvents(sensors_event_t* data, int count);
-    void processEvent(int code, int value);
+    int mEnabled;
+    InputEventCircularReader mInputReader;
+    sensors_event_t mPendingEvent;
+	sensors_event_t mPendingEvents[numSensors];
+    bool mHasPendingEvent;
+    char input_sysfs_path[PATH_MAX];
+    int input_sysfs_path_len;
 
     int setInitialState();
 
-private:
-    int loadAKMLibrary();
-    int update_delay();
-    void *mLibAKM;
-    uint32_t mEnabled;
-    uint32_t mPendingMask;
-    InputEventCircularReader mInputReader;
-    sensors_event_t mPendingEvents[numSensors];
-    uint64_t mDelays[numSensors];
+public:
+            MagneticSensor();
+    virtual ~MagneticSensor();
+    virtual int readEvents(sensors_event_t* data, int count);
+    virtual bool hasPendingEvents() const;
+    virtual int setDelay(int32_t handle, int64_t ns);
+    virtual int enable(int32_t handle, int enabled);
+	
 };
-
-/*****************************************************************************/
-
-#endif  // ANDROID_AKM_SENSOR_H

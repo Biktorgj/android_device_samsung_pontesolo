@@ -68,11 +68,11 @@ int GyroSensor::setInitialState() {
         !ioctl(data_fd, EVIOCGABS(EVENT_TYPE_GYRO_X), &absinfo_y) &&
         !ioctl(data_fd, EVIOCGABS(EVENT_TYPE_GYRO_X), &absinfo_z)) {
         value = absinfo_x.value;
-        mPendingEvent.data[0] = value * CONVERT_GYRO_X;
+        mPendingEvent.data[0] = value/1000;// * CONVERT_GYRO_X;
         value = absinfo_x.value;
-        mPendingEvent.data[1] = value * CONVERT_GYRO_Y;
+        mPendingEvent.data[1] = value/1000;// * CONVERT_GYRO_Y;
         value = absinfo_x.value;
-        mPendingEvent.data[2] = value * CONVERT_GYRO_Z;
+        mPendingEvent.data[2] = value/1000;// * CONVERT_GYRO_Z;
         mHasPendingEvent = true;
     }
     return 0;
@@ -141,11 +141,11 @@ again:
         if (type == EV_REL) {
             float value = event->value;
             if (event->code == EVENT_TYPE_GYRO_X) {
-                mPendingEvent.data[0] = value * CONVERT_GYRO_X;
+                mPendingEvent.data[0] = value /1000;// * CONVERT_GYRO_X;
             } else if (event->code == EVENT_TYPE_GYRO_Y) {
-                mPendingEvent.data[1] = value * CONVERT_GYRO_Y;
+                mPendingEvent.data[1] = value/1000;//; * CONVERT_GYRO_Y;
             } else if (event->code == EVENT_TYPE_GYRO_Z) {
-                mPendingEvent.data[2] = value * CONVERT_GYRO_Z;
+                mPendingEvent.data[2] = value/1000;//; * CONVERT_GYRO_Z;
             }
         } else if (type == EV_SYN) {
             mPendingEvent.timestamp = timevalToNano(event->time);

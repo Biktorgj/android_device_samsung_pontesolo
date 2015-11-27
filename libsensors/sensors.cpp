@@ -35,7 +35,7 @@
 
 #include "LightSensor.h"
 #include "ProximitySensor.h"
-#include "AkmSensor.h"
+#include "GeoMagneticSensor.h"
 #include "GyroSensor.h"
 #include "AccelSensor.h"
 #include "PressureSensor.h"
@@ -66,9 +66,6 @@
 #define SENSORS_GYROSCOPE_HANDLE        5
 #define SENSORS_PRESSURE_HANDLE         6
 
-#define AKM_FTRACE 0
-#define AKM_DEBUG 0
-#define AKM_DATA 0
 
 /*
 	GEAR S:
@@ -187,7 +184,7 @@ private:
     enum {
         light           = 0,
         proximity       = 1,
-        akm             = 2,
+        magnetic        = 2,
         gyro            = 3,
         accel           = 4,
         pressure        = 5,
@@ -209,7 +206,7 @@ private:
                 return accel;
             case ID_M:
             case ID_O:
-                return akm;
+                return magnetic;
             case ID_P:
                 return proximity;
             case ID_L:
@@ -237,10 +234,10 @@ sensors_poll_context_t::sensors_poll_context_t()
     mPollFds[proximity].events = POLLIN;
     mPollFds[proximity].revents = 0;
 
-    mSensors[akm] = new AkmSensor();
-    mPollFds[akm].fd = mSensors[akm]->getFd();
-    mPollFds[akm].events = POLLIN;
-    mPollFds[akm].revents = 0;
+    mSensors[magnetic] = new MagneticSensor();
+    mPollFds[magnetic].fd = mSensors[magnetic]->getFd();
+    mPollFds[magnetic].events = POLLIN;
+    mPollFds[magnetic].revents = 0;
 
     mSensors[gyro] = new GyroSensor();
     mPollFds[gyro].fd = mSensors[gyro]->getFd();

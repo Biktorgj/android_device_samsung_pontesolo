@@ -21,16 +21,16 @@
 MagneticSensor::MagneticSensor()
     : SensorBase(NULL, "geomagnetic_sensor"),
       mEnabled(0),
-
       mInputReader(4),
-      mHasPendingEvent(false)
-{
-	memset(mPendingEvents, 0, sizeof(mPendingEvents));
-	mPendingEvents[MagneticField].version = sizeof(sensors_event_t);
-    mPendingEvents[MagneticField].sensor = ID_M;
-    mPendingEvents[MagneticField].type = SENSOR_TYPE_MAGNETIC_FIELD;
-    mPendingEvents[MagneticField].magnetic.status = SENSOR_STATUS_ACCURACY_HIGH;
+      mHasPendingEvent(false),
+      mEnabledTime(0)
+	{
 
+	mPendingEvent.version = sizeof(sensors_event_t);
+    mPendingEvent.sensor = ID_M;
+    mPendingEvent.type = SENSOR_TYPE_MAGNETIC_FIELD;
+    memset(mPendingEvent.data, 0, sizeof(mPendingEvent.data));
+	
     if (data_fd) {
         strcpy(input_sysfs_path, "/sys/class/input/");
         strcat(input_sysfs_path, input_name);
@@ -58,85 +58,51 @@ int MagneticSensor::setInitialState()
     if (!ioctl(data_fd, EVIOCGABS(REL_RX), &absinfo_x) &&
         !ioctl(data_fd, EVIOCGABS(REL_RY), &absinfo_y) &&
         !ioctl(data_fd, EVIOCGABS(REL_RZ), &absinfo_z)) {
+		
+		mPendingEvent.data[0] = value * CONVERT_M;// * CONVERT_GYRO_X;
         value = absinfo_x.value;
-        mPendingEvents[MagneticField].magnetic.x = value;// * CONVERT_GYRO_X;
+        mPendingEvent.data[1] = value * CONVERT_M;// * CONVERT_GYRO_Y;
         value = absinfo_x.value;
-        mPendingEvents[MagneticField].magnetic.y = value;// * CONVERT_GYRO_Y;
-        value = absinfo_x.value;
-        mPendingEvents[MagneticField].magnetic.z = value;// * CONVERT_GYRO_Z;
+        mPendingEvent.data[2] = value * CONVERT_M;// * CONVERT_GYRO_Z;
         mHasPendingEvent = true;
     }
     return 0;
 }
 
 int MagneticSensor::enable(int32_t handle, int en) {
-     int what = -1;
+	int flags = en ? 1 : 0;
+    int err;
+    if (flags != mEnabled) {
 	ALOGE("ENABLE MAGNETIC SENSOR");
-    switch (handle) {
-        case ID_M: what = MagneticField; break;
-        case ID_O: what = Orientation;   break;
+    err = sspEnable(LOGTAG, SSP_MAG, en);
+          if(err >= 0){
+             mEnabled = flags;
+             setInitialState();
+
+             return 0;
+         }
+         return -1;
     }
-	   if (uint32_t(what) >= numSensors)
-        return -EINVAL;
-
-    int newState  = en ? 1 : 0;
-    int err = 0;
-
-    if ((uint32_t(newState)<<what) != (mEnabled & (1<<what))) {
-
-        uint32_t sensor_type;
-
-        switch (what) {
-            case MagneticField:
-				sensor_type = SENSOR_TYPE_MAGNETIC_FIELD; 
-				ALOGE("ENABLE MAGSENSOR - MAGNETIC FIELD");
-				break;
-			case Orientation:
-				sensor_type = SENSOR_TYPE_ORIENTATION;
-				ALOGE("ENABLE MAGSENSOR - ORIENTATION");
-				break;
-        }
-        short flags = newState;
-  /*      if (en){
-            err = akm_enable_sensor(sensor_type);
-        }else{
-            err = akm_disable_sensor(sensor_type);
-        }*/
-
-        err = sspEnable(LOGTAG, SSP_MAG, en);
-        setInitialState();
-
-        ALOGE_IF(err, "Could not change sensor state (%s)", strerror(-err));
-        if (!err) {
-            mEnabled &= ~(1<<what);
-            mEnabled |= (uint32_t(flags)<<what);
-        }
-    }
-    return err;
+    return 0; 
 }
 
 
 bool MagneticSensor::hasPendingEvents() const {
-    /* FIXME probably here should be returning mEnabled but instead
-      mHasPendingEvents. It does not work, so we cheat.*/
-    //ALOGD("MagneticSensor::~hasPendingEvents %d", mHasPendingEvent ? 1 : 0 );
-    return mHasPendingEvent;
+   return mHasPendingEvent;
 }
 
 
 int MagneticSensor::setDelay(int32_t handle, int64_t ns)
 {
     int fd;
-
-    if (ns < 10000000) {
+    /*if (ns < 10000000) {
         ns = 10000000; // Minimum on stock
-    }
-	ALOGW("MAGNETIC_SENSOR: Set Delay");
+    }*/
     strcpy(&input_sysfs_path[input_sysfs_path_len], "mag_poll_delay");
     fd = open(input_sysfs_path, O_RDWR);
     if (fd >= 0) {
         char buf[80];
-        sprintf(buf, "%lld", ns / 10000000 * 10); // Some flooring to match stock value
+        sprintf(buf, "%lld", ns);
         write(fd, buf, strlen(buf)+1);
         close(fd);
         return 0;
@@ -165,46 +131,32 @@ int MagneticSensor::readEvents(sensors_event_t* data, int count)
 
     while (count && mInputReader.readEvent(&event)) {
         int type = event->type;
-        if (type == EV_REL || type == EV_ABS) {
+		// no fucking idea if this fucking shit will work. 
+        if (type == EV_REL && event->value > 0 && event->value < 360 ) {
             float value = event->value;
 			/* ACTUAL DATA PROCESSING GOES HERE */
-			ALOGE("MAGNETIC_SENSOR: value DETECTED! %i", event->value);
-			switch (event->value) {
-				case REL_X:
+			switch (event->code) {
 				case REL_RX:
-				ALOGE("MAGNETIC_SENSOR: %i REL_RX", event->value);
-					mPendingEvents[MagneticField].magnetic.x = value;
+					ALOGE("MAGNETIC_SENSOR: %i REL_RX", event->value);
+					 mPendingEvent.data[0] = value * CONVERT_M;
 					break;
-				case REL_Y:
 				case REL_RY:
-				ALOGE("MAGNETIC_SENSOR: %i REL_RY", event->value);
-					mPendingEvents[MagneticField].magnetic.y = value;
+					ALOGE("MAGNETIC_SENSOR: %i REL_RY", event->value);
+					 mPendingEvent.data[1] = value * CONVERT_M;
 					break;
-				case REL_Z:
 				case REL_RZ:
-				ALOGE("MAGNETIC_SENSOR: %i REL_RZ", event->value);			
-					mPendingEvents[MagneticField].magnetic.z = value;
-					break;
-				case REL_HWHEEL:
-				ALOGE("MAGNETIC_SENSOR: HWHEEL REPORTED");
-					//mPendingEvent[MagneticField].magnetic.z = value;
-					break;
-				case REL_DIAL:
-					ALOGE("MAGNETIC_SENSOR: REL_DIAL");
-					break;
-				case REL_WHEEL:
-					ALOGE("MAGNETIC_SENSOR: REL_WHEEL");
-					break;
-				default:
-					ALOGE("Whoops: %i DEfault case!", event->value);
+					ALOGE("MAGNETIC_SENSOR: %i REL_RZ", event->value);			
+					 mPendingEvent.data[2] = value * CONVERT_M;
 					break;
 			}
-        } else if (type == EV_SYN) {
-            mPendingEvents[MagneticField].timestamp = timevalToNano(event->time);
+		}else if (type == EV_SYN) {
+            mPendingEvent.timestamp = timevalToNano(event->time);
             if (mEnabled) {
-                *data++ = mPendingEvent;
+                if (mPendingEvent.timestamp >= mEnabledTime) {
+                    *data++ = mPendingEvent;
+                    numEventReceived++;
+                }
                 count--;
-                numEventReceived++;
             }
         } else {
             ALOGE("%s: unknown event (type=%d, code=%d)", LOGTAG,
@@ -213,6 +165,16 @@ int MagneticSensor::readEvents(sensors_event_t* data, int count)
 
         mInputReader.next();
     }
-    return numEventReceived++;
+#if FETCH_FULL_EVENT_BEFORE_RETURN
+    /* if we didn't read a complete event, see if we can fill and
+       try again instead of returning with nothing and redoing poll. */
+    if (numEventReceived == 0 && mEnabled == 1) {
+        n = mInputReader.fill(data_fd);
+        if (n)
+            goto again;
+    }
+#endif
+	
+    return numEventReceived;
 
 }

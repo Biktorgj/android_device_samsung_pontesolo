@@ -29,19 +29,13 @@
 struct input_event;
 
 class MagneticSensor : public SensorBase {
-	    enum {
-        Accelerometer   = 0,
-        MagneticField   = 1,
-        Orientation     = 2,
-        numSensors
-    };
     int mEnabled;
     InputEventCircularReader mInputReader;
     sensors_event_t mPendingEvent;
-	sensors_event_t mPendingEvents[numSensors];
     bool mHasPendingEvent;
     char input_sysfs_path[PATH_MAX];
     int input_sysfs_path_len;
+    int64_t mEnabledTime;
 
     int setInitialState();
 

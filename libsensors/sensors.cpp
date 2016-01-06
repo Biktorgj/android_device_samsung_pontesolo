@@ -111,7 +111,7 @@ static const struct sensor_t sSensorList[] = {
         { "AK09911 Magnetic field Sensor", // Electronic Compass
           "Asahi Kasei Microdevices",
           1, SENSORS_MAGNETIC_FIELD_HANDLE,
-          SENSOR_TYPE_MAGNETIC_FIELD, 32768.0f, CONVERT_M, 6.8f, 16667, 0, 0, 
+          SENSOR_TYPE_MAGNETIC_FIELD, 2000.0f, CONVERT_M, 6.8f, 16667, 0, 0, 
           SENSOR_STRING_TYPE_MAGNETIC_FIELD, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
         { "AK0911 Orientation Sensor", // Same device as above
           "Asahi Kasei Microdevices",

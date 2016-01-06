@@ -31,9 +31,13 @@
 static pthread_once_t g_init = PTHREAD_ONCE_INIT;
 static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 /* Biktor:
-Patched up library. Removed all LED related code and set the correct entry for the Gear S AMOLED Display */
+Patched up library. Removed all LED related code and set the correct entry for the Gear S AMOLED Display
+Tired of the touchscreen shit. Trying something else: When brightness goes to 0, we shut down the TS controller. That way it cannot be caught active while
+power collapse kicks in, leaving the IRQ hanging, and killing all touch events until reboot or manual disable/enable cycle.
+ */
 
 char const*const PANEL_FILE = "/sys/devices/fd922800.qcom,mdss_dsi/lcd/s6e36w0x01/s6e36w0x01-bl/brightness";
+#define TS_ENABLE "/sys/class/input/input0/enabled"
 
 void init_g_lock(void)
 {
@@ -64,7 +68,7 @@ static int write_int(char const *path, int value)
         return -errno;
     }
 }
-
+/*
 static int write_str(char const *path, const char* value)
 {
     int fd;
@@ -87,7 +91,7 @@ static int write_str(char const *path, const char* value)
         return -errno;
     }
 } 
-
+*/
 static int rgb_to_brightness(struct light_state_t const *state)
 {
     int color = state->color & 0x00ffffff;
@@ -104,7 +108,12 @@ static int set_light_backlight(struct light_device_t *dev,
 
     pthread_mutex_lock(&g_lock);
     err = write_int(PANEL_FILE, brightness);
-
+	
+	if (brightness == 0)
+		err = write_int(TS_ENABLE, 0);
+	else
+		err = write_int(TS_ENABLE, 1);
+	
     pthread_mutex_unlock(&g_lock);
     return err;
 }

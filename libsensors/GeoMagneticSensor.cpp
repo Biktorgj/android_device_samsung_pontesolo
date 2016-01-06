@@ -19,18 +19,12 @@
 /********************/
 
 MagneticSensor::MagneticSensor()
-    : SensorBase(NULL, "magnetic_sensor"),
+    : SensorBase(NULL, "geomagnetic_sensor"),
       mEnabled(0),
 
       mInputReader(4),
       mHasPendingEvent(false)
 {
-	ALOGW("MAGNETIC SENSOR: Open Input Path");
-    //mPendingEvent.version = sizeof(sensors_event_t);
-    //mPendingEvent.sensor = ID_M;
-    //mPendingEvent.type = SENSOR_TYPE_MAGNETIC_FIELD;
-	//mPendingEvent.status = SENSOR_STATUS_ACCURACY_HIGH;
-    //memset(mPendingEvent.data, 0, sizeof(mPendingEvent.data));
 	memset(mPendingEvents, 0, sizeof(mPendingEvents));
 	mPendingEvents[MagneticField].version = sizeof(sensors_event_t);
     mPendingEvents[MagneticField].sensor = ID_M;
@@ -61,9 +55,9 @@ int MagneticSensor::setInitialState()
     struct input_absinfo absinfo_y;
     struct input_absinfo absinfo_z;
     float value;
-    if (!ioctl(data_fd, EVIOCGABS(EVENT_TYPE_MAGV_X), &absinfo_x) &&
-        !ioctl(data_fd, EVIOCGABS(EVENT_TYPE_MAGV_Y), &absinfo_y) &&
-        !ioctl(data_fd, EVIOCGABS(EVENT_TYPE_MAGV_Z), &absinfo_z)) {
+    if (!ioctl(data_fd, EVIOCGABS(REL_RX), &absinfo_x) &&
+        !ioctl(data_fd, EVIOCGABS(REL_RY), &absinfo_y) &&
+        !ioctl(data_fd, EVIOCGABS(REL_RZ), &absinfo_z)) {
         value = absinfo_x.value;
         mPendingEvents[MagneticField].magnetic.x = value;// * CONVERT_GYRO_X;
         value = absinfo_x.value;
@@ -93,9 +87,14 @@ int MagneticSensor::enable(int32_t handle, int en) {
         uint32_t sensor_type;
 
         switch (what) {
-            case MagneticField: sensor_type = SENSOR_TYPE_MAGNETIC_FIELD; 
-								ALOGE("ENABLE MAGSENSOR - SWITCHED");
-								break;
+            case MagneticField:
+				sensor_type = SENSOR_TYPE_MAGNETIC_FIELD; 
+				ALOGE("ENABLE MAGSENSOR - MAGNETIC FIELD");
+				break;
+			case Orientation:
+				sensor_type = SENSOR_TYPE_ORIENTATION;
+				ALOGE("ENABLE MAGSENSOR - ORIENTATION");
+				break;
         }
         short flags = newState;
   /*      if (en){
@@ -148,7 +147,6 @@ int MagneticSensor::setDelay(int32_t handle, int64_t ns)
 
 int MagneticSensor::readEvents(sensors_event_t* data, int count)
 {
-	ALOGW("MAGNETIC_SENSOR: Read Events");
     if (count < 1)
         return -EINVAL;
 
@@ -170,26 +168,36 @@ int MagneticSensor::readEvents(sensors_event_t* data, int count)
         if (type == EV_REL || type == EV_ABS) {
             float value = event->value;
 			/* ACTUAL DATA PROCESSING GOES HERE */
-			ALOGE("MAGNETIC_SENSOR: value DETECTED!");
+			ALOGE("MAGNETIC_SENSOR: value DETECTED! %i", event->value);
 			switch (event->value) {
+				case REL_X:
 				case REL_RX:
-				ALOGE("MAGNETIC_SENSOR:REL_RX");
+				ALOGE("MAGNETIC_SENSOR: %i REL_RX", event->value);
 					mPendingEvents[MagneticField].magnetic.x = value;
 					break;
+				case REL_Y:
 				case REL_RY:
-				ALOGE("MAGNETIC_SENSOR:REL_RY");
+				ALOGE("MAGNETIC_SENSOR: %i REL_RY", event->value);
 					mPendingEvents[MagneticField].magnetic.y = value;
 					break;
+				case REL_Z:
 				case REL_RZ:
-				ALOGE("MAGNETIC_SENSOR: REL_RZ");			
+				ALOGE("MAGNETIC_SENSOR: %i REL_RZ", event->value);			
 					mPendingEvents[MagneticField].magnetic.z = value;
 					break;
 				case REL_HWHEEL:
 				ALOGE("MAGNETIC_SENSOR: HWHEEL REPORTED");
 					//mPendingEvent[MagneticField].magnetic.z = value;
 					break;
+				case REL_DIAL:
+					ALOGE("MAGNETIC_SENSOR: REL_DIAL");
+					break;
+				case REL_WHEEL:
+					ALOGE("MAGNETIC_SENSOR: REL_WHEEL");
+					break;
 				default:
-					ALOGE("DEFAULT");
+					ALOGE("Whoops: %i DEfault case!", event->value);
+					break;
 			}
         } else if (type == EV_SYN) {
             mPendingEvents[MagneticField].timestamp = timevalToNano(event->time);

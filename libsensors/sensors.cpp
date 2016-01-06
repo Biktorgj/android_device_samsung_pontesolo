@@ -34,7 +34,6 @@
 #include "sensors.h"
 
 #include "LightSensor.h"
-#include "ProximitySensor.h"
 #include "GeoMagneticSensor.h"
 #include "GyroSensor.h"
 #include "AccelSensor.h"
@@ -54,7 +53,6 @@
 #define SENSORS_MAGNETIC_FIELD   (1<<ID_M)
 #define SENSORS_ORIENTATION      (1<<ID_O)
 #define SENSORS_LIGHT            (1<<ID_L)
-#define SENSORS_PROXIMITY        (1<<ID_P)
 #define SENSORS_GYROSCOPE        (1<<ID_GY)
 #define SENSORY_PRESSURE         (1<<ID_PR)
 
@@ -62,7 +60,6 @@
 #define SENSORS_MAGNETIC_FIELD_HANDLE   1
 #define SENSORS_ORIENTATION_HANDLE      2
 #define SENSORS_LIGHT_HANDLE            3
-#define SENSORS_PROXIMITY_HANDLE        4
 #define SENSORS_GYROSCOPE_HANDLE        5
 #define SENSORS_PRESSURE_HANDLE         6
 
@@ -97,6 +94,14 @@ easier to adapt Samsung Manta's sensor library directly */
 /*****************************************************************************/
 
 /* SensorHub Modules */
+
+/* *NAME* |
+  *VENDOR*|
+  ? | HANDLE |
+  SENSOR TYPE | RANGE | RESOLUTION | ENERGY CONSUMPTION | ? | ? | ? |
+  SENS. STRING|  ?    |     ?      | SENSOR FLAGS		|? |
+
+*/
 static const struct sensor_t sSensorList[] = {
         { "ICM20628 Acceleration Sensor", // ICM20628 Accel+Gyro
           "InvenSense",
@@ -106,7 +111,7 @@ static const struct sensor_t sSensorList[] = {
         { "AK09911 Magnetic field Sensor", // Electronic Compass
           "Asahi Kasei Microdevices",
           1, SENSORS_MAGNETIC_FIELD_HANDLE,
-          SENSOR_TYPE_MAGNETIC_FIELD, 2000.0f, CONVERT_M, 6.8f, 16667, 0, 0, 
+          SENSOR_TYPE_MAGNETIC_FIELD, 32768.0f, CONVERT_M, 6.8f, 16667, 0, 0, 
           SENSOR_STRING_TYPE_MAGNETIC_FIELD, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
         { "AK0911 Orientation Sensor", // Same device as above
           "Asahi Kasei Microdevices",
@@ -121,13 +126,8 @@ static const struct sensor_t sSensorList[] = {
         { "LPS25H Pressure sensor",
           "STMicroelectronics",
           1, SENSORS_PRESSURE_HANDLE,
-          SENSOR_TYPE_PRESSURE, 1100.0f, 0.01f, 0.06f, 50000, 0, 0, 
+          SENSOR_TYPE_PRESSURE, 1260.0f, 0.01f, 0.06f, 50000, 0, 0, 
           SENSOR_STRING_TYPE_PRESSURE, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
-        { "CM36651 Proximity Sensor", // do we have one?
-          "Capella Microsystems",
-          1, SENSORS_PROXIMITY_HANDLE,
-          SENSOR_TYPE_PROXIMITY, 5.0f, 5.0f, 0.75f, 0, 0, 0, 
-          SENSOR_STRING_TYPE_PROXIMITY, "", 0, SENSOR_FLAG_WAKE_UP, { } },
         { "AL3320 Optical Sensor",
           "Dyna Image",
           1, SENSORS_LIGHT_HANDLE,
@@ -183,11 +183,10 @@ struct sensors_poll_context_t {
 private:
     enum {
         light           = 0,
-        proximity       = 1,
-        magnetic        = 2,
-        gyro            = 3,
-        accel           = 4,
-        pressure        = 5,
+        magnetic        = 1,
+        gyro            = 2,
+        accel           = 3,
+        pressure        = 4,
         numSensorDrivers,
         numFds,
     };
@@ -207,9 +206,7 @@ private:
             case ID_M:
             case ID_O:
                 return magnetic;
-            case ID_P:
-                return proximity;
-            case ID_L:
+				case ID_L:
                 return light;
             case ID_GY:
                 return gyro;
@@ -228,11 +225,6 @@ sensors_poll_context_t::sensors_poll_context_t()
     mPollFds[light].fd = mSensors[light]->getFd();
     mPollFds[light].events = POLLIN;
     mPollFds[light].revents = 0;
-
-    mSensors[proximity] = new ProximitySensor();
-    mPollFds[proximity].fd = mSensors[proximity]->getFd();
-    mPollFds[proximity].events = POLLIN;
-    mPollFds[proximity].revents = 0;
 
     mSensors[magnetic] = new MagneticSensor();
     mPollFds[magnetic].fd = mSensors[magnetic]->getFd();

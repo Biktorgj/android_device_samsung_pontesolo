@@ -38,7 +38,7 @@
 /*****************************************************************************/
 
 PressureSensor::PressureSensor()
-    : SensorBase(NULL, "pressure_sensor"),
+    : SensorBase(NULL, "pressure_sensor"), //pressure_sensor
       mEnabled(0),
       mInputReader(4),
       mHasPendingEvent(false)
@@ -132,8 +132,14 @@ int PressureSensor::readEvents(sensors_event_t* data, int count)
     while (count && mInputReader.readEvent(&event)) {
         int type = event->type;
         if (type == EV_REL) {
-            if (event->code == EVENT_TYPE_PRESSURE) {
-                mPendingEvent.pressure = event->value * PRESSURE_HECTO;
+            if (event->code == REL_HWHEEL || event->code == REL_X) { // pressure
+                mPendingEvent.pressure = event->value;
+            }
+           if (event->code == REL_DIAL || event->code == REL_Y) { //sea level
+           //     mPendingEvent.sealevel = event->value;
+            }
+           if (event->code == REL_WHEEL || event->code == REL_Z) { // temperature
+                mPendingEvent.temperature = event->value;
             }
         } else if (type == EV_SYN) {
             mPendingEvent.timestamp = timevalToNano(event->time);

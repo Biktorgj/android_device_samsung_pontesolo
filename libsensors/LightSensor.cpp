@@ -128,22 +128,16 @@ int LightSensor::readEvents(sensors_event_t* data, int count)
     while (count && mInputReader.readEvent(&event)) {
         int type = event->type;
         if (type == EV_ABS) {
-			ALOGE("LIGHT - EVABS");
              if (event->code == ABS_MISC) {
-					ALOGE("LIGHT - MISC");
                     mPendingEvent.light = event->value;
             }
 		}else if (type == EV_REL){
-			ALOGE("LIGHT - EVREL");
 			if (event->code == REL_MISC) {
-					ALOGE("LIGHT - REL_MISC");
                     mPendingEvent.light = event->value -1; // Substract 1 from BIAS def as in tizen
             }else if (event->code == REL_RX) {
-					ALOGE ("LIGHT - RELRX");
                     mPendingEvent.light = event->value -1; // Substract 1 from BIAS def as in tizen
             }
         } else if (type == EV_SYN) {
-			ALOGE("LIGHT - EV_SYN");
             mPendingEvent.timestamp = timevalToNano(event->time);
             if (mEnabled) {
                 *data++ = mPendingEvent;

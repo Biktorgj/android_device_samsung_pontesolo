@@ -11,6 +11,21 @@
 	<ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia5" value="0" />
 	<ctl name="SLIMBUS_0_RX Audio Mixer MultiMedia10" value="0" />
 
+	<ctl name="SLIMBUS_0_RX Port Mixer SLIM_0_TX" value="0" />
+
+	<ctl name="AUX_PCM_RX Audio Mixer MultiMedia1" value="0" />
+	<ctl name="AUX_PCM_RX Audio Mixer MultiMedia4" value="0" />
+	<ctl name="AUX_PCM_RX Audio Mixer MultiMedia5" value="0" />
+	<ctl name="SLIM_0_RX_Voice Mixer CSVoice" value="0" />
+	<ctl name="SLIM_0_RX_Voice Mixer Voip" value="0" />
+
+	<!-- cp2 call part -->
+	<ctl name="SLIM_0_RX_Voice Mixer Voice2" value="0" />
+	<ctl name="AUX_PCM_RX_Voice Mixer Voice2" value="0" />
+	<!-- end of cp2 call part -->
+
+	<ctl name="AUX_PCM_RX_Voice Mixer CSVoice" value="0" />
+	<ctl name="AUX_PCM_RX_Voice Mixer Voip" value="0" />
 	<ctl name="SLIM RX1 MUX" value="ZERO" />
 	<ctl name="SLIM RX2 MUX" value="ZERO" />
 	<ctl name="SLIM RX3 MUX" value="ZERO" />
@@ -66,6 +81,13 @@
 	<ctl name="MultiMedia1 Mixer SLIM_4_TX" value="0" />
 	<ctl name="MultiMedia1 Mixer INTERNAL_BT_SCO_TX" value="0" />
 
+
+
+
+
+
+
+
 	<ctl name="SLIM TX10 MUX" value="ZERO" />
 	<ctl name="SLIM TX9 MUX" value="ZERO" />
 	<ctl name="SLIM TX8 MUX" value="ZERO" />
@@ -107,7 +129,7 @@
 	</path>
 
 	<path name="deep-buffer-playback bt-sco">
-		<ctl name="INTERNAL_BT_SCO_RX Audio Mixer MultiMedia1" value="1" />
+		<ctl name="AUX_PCM_RX Audio Mixer MultiMedia1" value="1" />
 	</path>
 	<path name="deep-buffer-playback transmission-fm">
         <ctl name="INTERNAL_FM_RX Audio Mixer MultiMedia1" value="1" />
@@ -172,7 +194,7 @@
 	</path>
 
 	<path name="audio-record bt-sco">
-		<ctl name="MultiMedia1 Mixer INTERNAL_BT_SCO_TX" value="1" />
+		<ctl name="MultiMedia2 Mixer INTERNAL_BT_SCO_TX" value="1" />
 	</path>
 	
 	<path name="audio-record capture-fm">
@@ -186,8 +208,9 @@
 	</path>
 
 	<path name="voice-call bt-sco">
-		<ctl name="INTERNAL_BT_SCO_RX_Voice Mixer CSVoice" value="1" />
-		<ctl name="Voice_Tx Mixer INTERNAL_BT_SCO_TX_Voice" value="1" />
+
+		<ctl name="AUX_PCM_RX_Voice Mixer CSVoice" value="1" />
+		<ctl name="Voice_Tx Mixer AUX_PCM_TX_Voice" value="1" />
 	</path>
 
 	<path name="voip-call">
@@ -196,8 +219,9 @@
 	</path>
 
 	<path name="voip-call bt-sco">
-		<ctl name="INTERNAL_BT_SCO_RX_Voice Mixer Voip" value="1" />
-		<ctl name="Voip_Tx Mixer INTERNAL_BT_SCO_TX_Voip" value="1" />
+
+		<ctl name="AUX_PCM_RX_Voip Mixer Voip" value="1" />
+		<ctl name="Voip_Tx Mixer AUX_PCM_TX_Voip" value="1" />
 	</path>
 
 	<path name="incall-rec-uplink">
@@ -212,6 +236,23 @@
 		<ctl name="MultiMedia1 Mixer VOC_REC_UL" value="1" />
 		<ctl name="MultiMedia1 Mixer VOC_REC_DL" value="1" />
 	</path>
+	<!-- cp2 call part -->
+	<path name="voice2-call">
+		<ctl name="SLIM_0_RX_Voice Mixer Voice2" value="1" />
+		<ctl name="Voice2_Tx Mixer SLIM_0_TX_Voice2" value="1" />
+	</path>
+
+	<path name="voice-call bt-sco">
+		<ctl name="AUX_PCM_RX_Voice Mixer Voice2" value="1" />
+		<ctl name="Voice2_Tx Mixer AUX_PCM_TX_Voice2" value="1" />
+	</path>
+	
+	<path name="voice2-call bt-sco">
+		<ctl name="AUX_PCM_RX_Voice Mixer Voice2" value="1" />
+		<ctl name="Voice2_Tx Mixer AUX_PCM_TX_Voice2" value="1" />
+	</path>
+
+	<!-- end of cp2 call part -->
 	<!-- end of Verb -->
 
 	<!-- ================================================================ -->

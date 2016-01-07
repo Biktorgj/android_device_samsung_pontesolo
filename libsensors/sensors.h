@@ -72,6 +72,8 @@ __BEGIN_DECLS
 #define ID_T  (7) // Temperature from pressure sensor
 #define ID_UV (8) // UV
 #define ID_HRM (9) // Heart rate monitor
+#define ID_ROT (10)
+#define ID_SSP (11) // SSP Context Sensor
 
 #define SSP_ACCEL  (1)
 #define SSP_GYRO   (2)
@@ -79,6 +81,8 @@ __BEGIN_DECLS
 #define SSP_PRESS  (32)
 #define SSP_LIGHT  (512)
 /* ....*/
+#define SSP_ROTV (65536)
+#define SSP_STEP (131072)
 #define SSP_UV (4194304)
 #define SSP_HRM (1048576)
  
@@ -90,8 +94,8 @@ const int ssp_sensors[] = {
   SSP_MAG,
   SSP_PRESS,
   SSP_LIGHT,
-  SSP_UV,
-  SSP_HRM
+  SSP_HRM,
+  SSP_ROTV
 };
 
 /*****************************************************************************/
@@ -133,11 +137,6 @@ const int ssp_sensors[] = {
 #define EVENT_TYPE_PRESSURE         REL_HWHEEL
 
 #define LSG                         (1000.0f)
-
-// Proximity values
-#define PROXIMITY_NODE_STATE_NEAR (0)
-#define PROXIMITY_NODE_STATE_FAR (1)
-#define PROXIMITY_NODE_STATE_UNKNOWN (2)
 
 // conversion of acceleration data to SI units (m/s^2)
 #define RANGE_A                     (2*GRAVITY_EARTH)

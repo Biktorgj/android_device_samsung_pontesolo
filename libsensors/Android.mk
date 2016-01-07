@@ -34,9 +34,12 @@ LOCAL_SRC_FILES := 						\
 				LightSensor.cpp			\
 				GeoMagneticSensor.cpp   \
 				GyroSensor.cpp          \
-                InputEventReader.cpp            \
-                AccelSensor.cpp                 \
-                PressureSensor.cpp
+                InputEventReader.cpp    \
+                AccelSensor.cpp         \
+				RotationSensor.cpp		\
+                PressureSensor.cpp		\
+				SSPContextSensor.cpp	\
+				BioHRM.cpp
 
 LOCAL_SHARED_LIBRARIES := liblog libcutils libdl
 LOCAL_PRELINK_MODULE := false

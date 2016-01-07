@@ -38,7 +38,10 @@
 #include "GyroSensor.h"
 #include "AccelSensor.h"
 #include "PressureSensor.h"
-// #include "BioHRM.h"
+
+#include "RotationSensor.h"
+#include "SSPContextSensor.h"
+#include "BioHRM.h"
 
 /*****************************************************************************/
 
@@ -54,7 +57,10 @@
 #define SENSORS_ORIENTATION      (1<<ID_O)
 #define SENSORS_LIGHT            (1<<ID_L)
 #define SENSORS_GYROSCOPE        (1<<ID_GY)
-#define SENSORY_PRESSURE         (1<<ID_PR)
+#define SENSORS_PRESSURE         (1<<ID_PR)
+#define SENSORS_BIO_HRM			 (1<<ID_HRM)
+#define SENSORS_ROT_VECTOR		 (1<<ID_ROT)
+#define SENSORS_SSP_CONTEXT		 (1<<ID_SSP)
 
 #define SENSORS_ACCELERATION_HANDLE     0
 #define SENSORS_MAGNETIC_FIELD_HANDLE   1
@@ -62,7 +68,9 @@
 #define SENSORS_LIGHT_HANDLE            3
 #define SENSORS_GYROSCOPE_HANDLE        5
 #define SENSORS_PRESSURE_HANDLE         6
-
+#define SENSORS_ROTVECTOR_HANDLE		7
+#define SENSORS_BIOHRM_HANDLE			8
+#define SENSORS_SSPCONTEXT_HANDLE		9
 
 /*
 	GEAR S:
@@ -72,25 +80,7 @@ AL3320 Optical / Light sensor Dyna Image
 LPS25H - STMicroelectronics PRESSURE
 ADPD142 Heart Rate Monitor
 UVIS25 - STMicroelectronics UV Sensor
-	
-	EXPECTED RESULT
- Method for autodetecting all the available sensors:
-1. Parse the following directory:
-/sys/devices/virtual/sensors
-2. For each directory found, get the contents of the following files:
-NAME, VENDOR
-3. From the directory names, create an array with the available sensors
-   to build the sensor list. If you have enough to match them out, populate
-   not only the phyisical sensors but also the virtual sensors that you can
-   create from them, just like the tilt_sensor, game_rotation_vector etc.
-   
-The purpose is to have a modular Seamless Sensor Platform HAL, that can be
-more easily transplanted to other watches / phones, like the Galaxy S5, Gear 2
-or Gear S2.
-
-All these don't use IIO (IndustrialIO) devices though, but for those it would be
-easier to adapt Samsung Manta's sensor library directly */
-
+	*/
 /*****************************************************************************/
 
 /* SensorHub Modules */
@@ -126,15 +116,31 @@ static const struct sensor_t sSensorList[] = {
         { "LPS25H Pressure sensor",
           "STMicroelectronics",
           1, SENSORS_PRESSURE_HANDLE,
-          SENSOR_TYPE_PRESSURE, 1260.0f, 0.01f, 0.06f, 50000, 0, 0, 
+          SENSOR_TYPE_PRESSURE, 1260.0f, 0.002083f, 0.06f, 50000, 0, 0, 
           SENSOR_STRING_TYPE_PRESSURE, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
         { "AL3320 Optical Sensor",
           "Dyna Image",
           1, SENSORS_LIGHT_HANDLE,
           SENSOR_TYPE_LIGHT, 10240.0f, 1.0f, 0.75f, 0, 0, 0, 
           SENSOR_STRING_TYPE_LIGHT, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
-		  
-		  // Missing ADPD142, UVIS25
+		// These values down here will be all wrooong
+       { "SSP Rotation Vector",
+          "Samsung",
+          1, SENSORS_ROTVECTOR_HANDLE,
+          SENSOR_TYPE_ROTATION_VECTOR, 360.0f, 1.0f, 0.23f, 0, 0, 0, 
+          SENSOR_STRING_TYPE_ROTATION_VECTOR, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },		
+       { "ADPD1242",
+          "Analog Devices Inc.",
+          1, SENSORS_BIOHRM_HANDLE,
+          SENSOR_TYPE_HEART_RATE, 300.0f, 1.0f, 0.23f, 0, 0, 0, 
+          SENSOR_STRING_TYPE_HEART_RATE, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },			  
+		 { "Seamless Sensor Platform",
+          "Samsung Electronics Corporation",
+          1, SENSORS_SSPCONTEXT_HANDLE,
+          SENSOR_TYPE_STEP_COUNTER, 65536.0f, 1.0f, 0.23f, 0, 0, 0, 
+          SENSOR_STRING_TYPE_STEP_COUNTER, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },			  
+		   
+		  // Missing ADPD142, UVIS25, Context
 };
 
 
@@ -159,8 +165,8 @@ struct sensors_module_t HAL_MODULE_INFO_SYM = {
                 version_major: 1,
                 version_minor: 0,
                 id: SENSORS_HARDWARE_MODULE_ID,
-                name: "Samsung Sensor module",
-                author: "Samsung Electronic Company",
+                name: "Seamless Sensor Platform HAL Driver",
+                author: "Cyanogenmod & Bik",
                 methods: &sensors_module_methods,
         },
         get_sensors_list: sensors__get_sensors_list,
@@ -187,6 +193,9 @@ private:
         gyro            = 2,
         accel           = 3,
         pressure        = 4,
+		rotationvector  = 5,
+		biohrm			= 6,
+		contextsensor	= 7,
         numSensorDrivers,
         numFds,
     };
@@ -212,6 +221,12 @@ private:
                 return gyro;
             case ID_PR:
                 return pressure;
+			case ID_ROT:
+				return rotationvector;
+			case ID_HRM:
+				return biohrm;
+			case ID_SSP:
+				return contextsensor;
         }
         return -EINVAL;
     }
@@ -246,6 +261,21 @@ sensors_poll_context_t::sensors_poll_context_t()
     mPollFds[pressure].events = POLLIN;
     mPollFds[pressure].revents = 0;
 
+    mSensors[rotationvector] = new RotationSensor();
+    mPollFds[rotationvector].fd = mSensors[rotationvector]->getFd();
+    mPollFds[rotationvector].events = POLLIN;
+    mPollFds[rotationvector].revents = 0;
+	
+	mSensors[biohrm] = new BioHRMSensor();
+    mPollFds[biohrm].fd = mSensors[biohrm]->getFd();
+    mPollFds[biohrm].events = POLLIN;
+    mPollFds[biohrm].revents = 0;
+	
+    mSensors[contextsensor] = new SSPContextSensor();
+    mPollFds[contextsensor].fd = mSensors[contextsensor]->getFd();
+    mPollFds[contextsensor].events = POLLIN;
+    mPollFds[contextsensor].revents = 0;
+	
     int wakeFds[2];
     int result = pipe(wakeFds);
     ALOGE_IF(result<0, "error creating wake pipe (%s)", strerror(errno));

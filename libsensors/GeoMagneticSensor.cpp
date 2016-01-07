@@ -10,8 +10,6 @@
 #include <cutils/log.h>
 #include <cstring>
 
-/*** Predefined data */
-
 #include "GeoMagneticSensor.h"
 #define LOGTAG "MagneticSensor"
 
@@ -43,14 +41,14 @@ MagneticSensor::MagneticSensor()
 MagneticSensor::~MagneticSensor() {
 
     if (mEnabled) {
-		ALOGW("MAGNETIC_SENSOR: ~MagneticSensor()");
+		ALOGW("Magnetic Sensor: Kill it!");
         enable(0, 0);
     }
 }
 
 int MagneticSensor::setInitialState()
 {
-	ALOGW("MAGNETIC_SENSOR: Set Initial State");
+	ALOGW("Magnetic Sensor: Set Initial State");
     struct input_absinfo absinfo_x;
     struct input_absinfo absinfo_y;
     struct input_absinfo absinfo_z;
@@ -73,13 +71,12 @@ int MagneticSensor::enable(int32_t handle, int en) {
 	int flags = en ? 1 : 0;
     int err;
     if (flags != mEnabled) {
-	ALOGE("ENABLE MAGNETIC SENSOR");
-    err = sspEnable(LOGTAG, SSP_MAG, en);
-          if(err >= 0){
-             mEnabled = flags;
-             setInitialState();
-
-             return 0;
+		ALOGE("Magnetic Sensor: Enable");
+		err = sspEnable(LOGTAG, SSP_MAG, en);
+        if(err >= 0){
+           mEnabled = flags;
+           setInitialState();
+           return 0;
          }
          return -1;
     }
@@ -129,6 +126,9 @@ int MagneticSensor::readEvents(sensors_event_t* data, int count)
     int numEventReceived = 0;
     input_event const* event;
 
+#if FETCH_FULL_EVENT_BEFORE_RETURN
+again:
+#endif
     while (count && mInputReader.readEvent(&event)) {
         int type = event->type;
 		// no fucking idea if this fucking shit will work. 
@@ -137,15 +137,15 @@ int MagneticSensor::readEvents(sensors_event_t* data, int count)
 			/* ACTUAL DATA PROCESSING GOES HERE */
 			switch (event->code) {
 				case REL_RX:
-					ALOGE("MAGNETIC_SENSOR: %i REL_RX", event->value);
+					ALOGE("Magnetic Sensor: %i REL_RX", event->value);
 					 mPendingEvent.data[0] = value * CONVERT_M;
 					break;
 				case REL_RY:
-					ALOGE("MAGNETIC_SENSOR: %i REL_RY", event->value);
+					ALOGE("Magnetic Sensor: %i REL_RY", event->value);
 					 mPendingEvent.data[1] = value * CONVERT_M;
 					break;
 				case REL_RZ:
-					ALOGE("MAGNETIC_SENSOR: %i REL_RZ", event->value);			
+					ALOGE("Magnetic Sensor: %i REL_RZ", event->value);			
 					 mPendingEvent.data[2] = value * CONVERT_M;
 					break;
 			}
@@ -159,8 +159,9 @@ int MagneticSensor::readEvents(sensors_event_t* data, int count)
                 count--;
             }
         } else {
-            ALOGE("%s: unknown event (type=%d, code=%d)", LOGTAG,
-                    type, event->code);
+			// I don't give a fuck if you have an unknown event, thank you veeery much
+         /*   ALOGE("%s: unknown event (type=%d, code=%d)", LOGTAG,
+                    type, event->code);*/ 
         }
 
         mInputReader.next();
@@ -174,7 +175,6 @@ int MagneticSensor::readEvents(sensors_event_t* data, int count)
             goto again;
     }
 #endif
-	
     return numEventReceived;
 
 }

@@ -28,7 +28,7 @@
 #include "RotationSensor.h"
 #include "SensorBase.h"
 
-#define LOGTAG "RotationSensor"
+#define LOG_TAG "RotationSensor"
 
 /*****************************************************************************/
 
@@ -112,7 +112,7 @@ int RotationSensor::enable(int32_t handle, int en) {
     int err;
     ALOGE("%s: Enable: %i", __func__, en);
     if (flags != mEnabled) {
-         err = sspEnable(LOGTAG, SSP_ROTV, en);
+         err = sspEnable(LOG_TAG, SSP_ROTV, en);
          if(err >= 0){
              mEnabled = flags;
              setInitialState();
@@ -179,7 +179,7 @@ again:
                 count--;
             }
         } else {
-            ALOGE("%s: unknown event (type=%d, code=%d)", LOGTAG,
+            ALOGE("%s: unknown event (type=%d, code=%d)", LOG_TAG,
                     type, event->code);
         }
         mInputReader.next();

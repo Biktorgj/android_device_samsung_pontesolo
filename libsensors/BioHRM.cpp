@@ -25,7 +25,7 @@
 
 #include "BioHRM.h"
 
-#define LOGTAG "AccelerometerSensor"
+#define LOG_TAG "AccelerometerSensor"
 
 /*****************************************************************************/
 BioHRMSensor::BioHRMSensor()
@@ -63,7 +63,7 @@ int BioHRMSensor::setInitialState()
 int BioHRMSensor::enable(int32_t handle, int en) {
     int err;
     if (en != mEnabled) {
-         err = sspEnable(LOGTAG, SSP_ACCEL, en);
+         err = sspEnable(LOG_TAG, SSP_ACCEL, en);
          if(err >= 0){
              mEnabled = en;
              setInitialState();
@@ -130,6 +130,7 @@ int BioHRMSensor::readEvents(sensors_event_t* data, int count)
 			switch (event->code){
 				case REL_X:
 					ALOGE("BioHRM Sensor: %i", event->value);
+					mPendingEvent.heart_rate.bpm = value;
 					break;
 				case REL_Y:
 					ALOGE("BioHRM Sensor: %i", event->value);
@@ -149,7 +150,7 @@ int BioHRMSensor::readEvents(sensors_event_t* data, int count)
                 numEventReceived++;
             }
         } else {
-            ALOGE("%s: unknown event (type=%d, code=%d)", LOGTAG,
+            ALOGE("%s: unknown event (type=%d, code=%d)", LOG_TAG,
                     type, event->code);
         }
 

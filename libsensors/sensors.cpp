@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define ALOG_TAG "SSP_Sensorhub"
+#define LOG_TAG "SSP_Sensorhub"
 
 #include <hardware/sensors.h>
 #include <fcntl.h>
@@ -38,7 +38,6 @@
 #include "GyroSensor.h"
 #include "AccelSensor.h"
 #include "PressureSensor.h"
-
 #include "RotationSensor.h"
 #include "SSPContextSensor.h"
 #include "BioHRM.h"
@@ -53,14 +52,14 @@
 #define SSP_PATH ssp_sensor
 
 #define SENSORS_ACCELERATION     (1<<ID_A)
+#define SENSORS_GYROSCOPE        (1<<ID_GY)
 #define SENSORS_MAGNETIC_FIELD   (1<<ID_M)
 #define SENSORS_ORIENTATION      (1<<ID_O)
-#define SENSORS_LIGHT            (1<<ID_L)
-#define SENSORS_GYROSCOPE        (1<<ID_GY)
 #define SENSORS_PRESSURE         (1<<ID_PR)
-#define SENSORS_BIO_HRM			 (1<<ID_HRM)
+#define SENSORS_LIGHT            (1<<ID_L)
 #define SENSORS_ROT_VECTOR		 (1<<ID_ROT)
 #define SENSORS_SSP_CONTEXT		 (1<<ID_SSP)
+#define SENSORS_BIO_HRM			 (1<<ID_HRM)
 
 #define SENSORS_ACCELERATION_HANDLE     0
 #define SENSORS_MAGNETIC_FIELD_HANDLE   1
@@ -82,16 +81,17 @@ ADPD142 Heart Rate Monitor
 UVIS25 - STMicroelectronics UV Sensor
 	*/
 /*****************************************************************************/
-
-/* SensorHub Modules */
-
-/* *NAME* |
-  *VENDOR*|
-  ? | HANDLE |
-  SENSOR TYPE | RANGE | RESOLUTION | ENERGY CONSUMPTION | ? | ? | ? |
-  SENS. STRING|  ?    |     ?      | SENSOR FLAGS		|? |
-
-*/
+/* Sensor structure template
+.name       = "",
+.vendor     = "",
+.version    = ,
+.handle     = ,
+.type       = ,
+.maxRange   = ,
+.resolution = ,
+.power      = ,
+.minDelay   = ,
+.reserved   = {}	*/
 static const struct sensor_t sSensorList[] = {
         { "ICM20628 Acceleration Sensor", // ICM20628 Accel+Gyro
           "InvenSense",
@@ -101,35 +101,35 @@ static const struct sensor_t sSensorList[] = {
         { "AK09911 Magnetic field Sensor", // Electronic Compass
           "Asahi Kasei Microdevices",
           1, SENSORS_MAGNETIC_FIELD_HANDLE,
-          SENSOR_TYPE_MAGNETIC_FIELD, 2000.0f, CONVERT_M, 6.8f, 16667, 0, 0, 
+          SENSOR_TYPE_MAGNETIC_FIELD, 4900.0f, 0.060000f, 6.8f, 20000, 0, 0, 
           SENSOR_STRING_TYPE_MAGNETIC_FIELD, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
         { "AK0911 Orientation Sensor", // Same device as above
           "Asahi Kasei Microdevices",
           1, SENSORS_ORIENTATION_HANDLE,
-          SENSOR_TYPE_ORIENTATION, 360.0f, CONVERT_O, 7.8f, 16667, 0, 0, 
+          SENSOR_TYPE_ORIENTATION, 360.0f, CONVERT_O, 7.8f, 20000, 0, 0, 
           SENSOR_STRING_TYPE_ORIENTATION, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
         { "ICM20628 Gyroscope Sensor", // Same device as accel
           "InvenSense",
           1, SENSORS_GYROSCOPE_HANDLE,
-          SENSOR_TYPE_GYROSCOPE, RANGE_GYRO, CONVERT_GYRO, 6.1f, 1190, 0, 0, 
+          SENSOR_TYPE_GYROSCOPE, 2000.097656f, 0.061040f, 6.1f, 1190, 0, 0, 
           SENSOR_STRING_TYPE_GYROSCOPE, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
         { "LPS25H Pressure sensor",
           "STMicroelectronics",
           1, SENSORS_PRESSURE_HANDLE,
-          SENSOR_TYPE_PRESSURE, 1260.0f, 0.002083f, 0.06f, 50000, 0, 0, 
+          SENSOR_TYPE_PRESSURE, 1260.0f, 0.000244f, 0.06f, 50000, 0, 0, 
           SENSOR_STRING_TYPE_PRESSURE, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
         { "AL3320 Optical Sensor",
-          "Dyna Image",
+          "LITEON",
           1, SENSORS_LIGHT_HANDLE,
-          SENSOR_TYPE_LIGHT, 10240.0f, 1.0f, 0.75f, 0, 0, 0, 
+          SENSOR_TYPE_LIGHT, 65536.0f, 1.0f, 0.75f, 0, 0, 0, 
           SENSOR_STRING_TYPE_LIGHT, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
 		// These values down here will be all wrooong
        { "SSP Rotation Vector",
           "Samsung",
           1, SENSORS_ROTVECTOR_HANDLE,
-          SENSOR_TYPE_ROTATION_VECTOR, 360.0f, 1.0f, 0.23f, 0, 0, 0, 
+          SENSOR_TYPE_ROTATION_VECTOR, 4.0f, 1.0f, 0.23f, 0, 0, 0, 
           SENSOR_STRING_TYPE_ROTATION_VECTOR, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },		
-       { "ADPD1242",
+       { "AD45251",
           "Analog Devices Inc.",
           1, SENSORS_BIOHRM_HANDLE,
           SENSOR_TYPE_HEART_RATE, 300.0f, 1.0f, 0.23f, 0, 0, 0, 
@@ -137,11 +137,9 @@ static const struct sensor_t sSensorList[] = {
 		 { "Seamless Sensor Platform",
           "Samsung Electronics Corporation",
           1, SENSORS_SSPCONTEXT_HANDLE,
-          SENSOR_TYPE_STEP_COUNTER, 65536.0f, 1.0f, 0.23f, 0, 0, 0, 
-          SENSOR_STRING_TYPE_STEP_COUNTER, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },			  
-		   
-		  // Missing ADPD142, UVIS25, Context
-};
+          SENSOR_TYPE_STEP_COUNTER, 100.0f, 1.0f, 0.23f, 0, 0, 0, 
+          SENSOR_STRING_TYPE_STEP_COUNTER, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
+	};
 
 
 static int open_sensors(const struct hw_module_t* module, const char* id,

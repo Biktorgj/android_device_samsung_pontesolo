@@ -31,9 +31,26 @@ __BEGIN_DECLS
 
 /*****************************************************************************/
 
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
+
+#define ID_A  (0) // accel
+#define ID_M  (1) // magnetic
+#define ID_O  (2) // orientation
+#define ID_L  (3) // light
+#define ID_GY (5) // gyro
+#define ID_PR (6) // pressure
+#define ID_ROT (7) // Rotation Vector
+#define ID_HRM (8) // Heart rate monitor
+#define ID_SSP (9) // SSP Context Sensor
+
+/* Not in use */
+//#define ID_UV (10) // UV
+//#define ID_T  (11) // Temperature from pressure sensor
+
 /*
-	 SENSOR_TYPES (look at drivers/sensorhub/stm/ssp.h in kernel source)
-	Values are X << 16 | 0x001, value must always be >0, so sensor 0 is 1
+Sensor Enable Bits (look at drivers/sensorhub/stm/ssp.h in kernel source)
+Values are X << 16 | 0x001, value must always be >0, so sensor 0 is 1
+If these are wrong sensors won't respond
 1			ACCELEROMETER_SENSOR = 0,
 2			GYROSCOPE_SENSOR,
 4			GEOMAGNETIC_UNCALIB_SENSOR,
@@ -56,36 +73,18 @@ __BEGIN_DECLS
 524288		BIO_HRM_RAW_FAC,
 1048576		BIO_HRM_LIB,
 2097152		TILT_MOTION,
-4194304		UV_SENSOR,
- */
+4194304		UV_SENSOR, */
 
-
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-
-#define ID_A  (0) // accel
-#define ID_M  (1) // magnetic
-#define ID_O  (2) // orientation
-#define ID_L  (3) // light
-#define ID_GY (5) // gyro
-#define ID_PR (6) // pressure
-/* .... */
-#define ID_T  (7) // Temperature from pressure sensor
-#define ID_UV (8) // UV
-#define ID_HRM (9) // Heart rate monitor
-#define ID_ROT (10)
-#define ID_SSP (11) // SSP Context Sensor
-
-#define SSP_ACCEL  (1)
-#define SSP_GYRO   (2)
+#define SSP_ACCEL  (1) 
+#define SSP_GYRO   (2) 
 #define SSP_MAG    (16)
 #define SSP_PRESS  (32)
 #define SSP_LIGHT  (512)
-/* ....*/
 #define SSP_ROTV (65536)
 #define SSP_STEP (131072)
-#define SSP_UV (4194304)
 #define SSP_HRM (1048576)
- 
+#define SSP_UV (4194304)
+// SysFS hook
 #define SSP_DEVICE_ENABLE   "/sys/class/sensors/ssp_sensor/enable"
 
 const int ssp_sensors[] = {
@@ -94,8 +93,10 @@ const int ssp_sensors[] = {
   SSP_MAG,
   SSP_PRESS,
   SSP_LIGHT,
-  SSP_HRM,
-  SSP_ROTV
+  SSP_ROTV,
+  SSP_STEP,
+  SSP_HRM
+ // SSP_UV
 };
 
 /*****************************************************************************/
@@ -103,12 +104,6 @@ const int ssp_sensors[] = {
 /*
  * The SENSORS Module
  */
-
- /*** ALL THIS HAS TO GO */
-
-/* the CM3663 is a binary proximity sensor that triggers around 6 cm on
- * this hardware */
-#define PROXIMITY_THRESHOLD_CM  8.0f
 
 /*****************************************************************************/
 
@@ -125,9 +120,9 @@ const int ssp_sensors[] = {
 #define EVENT_TYPE_MAGV_Y           REL_RY  // 4
 #define EVENT_TYPE_MAGV_Z           REL_RZ  // 5
 
-#define EVENT_TYPE_TEMPERATURE      ABS_THROTTLE
-#define EVENT_TYPE_STEP_COUNT       ABS_GAS
-#define EVENT_TYPE_PROXIMITY        0x0019
+#define EVENT_TYPE_TEMPERATURE      ABS_THROTTLE // garbage
+#define EVENT_TYPE_STEP_COUNT       ABS_GAS //garbage
+#define EVENT_TYPE_PROXIMITY        0x0019 // garbage
 #define EVENT_TYPE_LIGHT            ABS_MISC //REL_MISC
 
 #define EVENT_TYPE_GYRO_X           REL_RX

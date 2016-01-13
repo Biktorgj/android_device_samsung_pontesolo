@@ -29,7 +29,7 @@
 #include "SensorBase.h"
 
 #define LOGTAG "SSPContextSensor"
-#define SSP_SENSORHUB_PATH /dev/ssp_sensorhub
+#define SSP_SENSORHUB_PATH "/dev/ssp_sensorhub"
 
 #define SENSORHUB_ID_SENSOR 			(0)
 #define SENSORHUB_ID_GESTURE			(1)
@@ -38,11 +38,18 @@
 /* This is a different kind of sensor
 	This sensor driver connects to /dev/ssp_sensorhub directly,
 	and reads the data calculated by the SSP MCU (in this case the STM microcontroller)
-	This gives us the Step counter, the rotation vectors etc. */
+	This gives us the Step counter, the rotation vectors etc.
+	OK, corrections...
+	This sensor has, on one side, an  input node. On the Gear S this is input14
+	That's where we receive the notifications about sensor updates.
+	On the other side, we have the device node, SSP_SENSORHUB_PATH, where we manually
+	read all the pending data after having requested it and being notified in the input
+	node... I think. We'll see.
+	*/
 /*****************************************************************************/
 
 SSPContextSensor::SSPContextSensor()
-    : SensorBase(NULL, "ssp_sensorhub"), // is this right?
+    : SensorBase(NULL, "ssp_context"), // Gear S: input14
       mEnabled(0),
       mInputReader(4),
       mHasPendingEvent(false),
@@ -66,29 +73,38 @@ SSPContextSensor::~SSPContextSensor() {
         enable(0, 0);
     }
 }
-/*
+
 int SSPContextSensor::openDevice() {
-    data_fd = -1;
+    int data_fd = -1;
     data_fd = open(SSP_SENSORHUB_PATH, O_RDONLY);
-    ALOGE_IF(data_fd<0, "couldn't find '%s' input device", inputName);
+    ALOGE_IF(data_fd<0, "couldn't find '%s' input device", SSP_SENSORHUB_PATH);
     return data_fd;
 }
-*/
+
 int SSPContextSensor::setInitialState() {
 	/*
 	*	Context Sensor may return three different types of data:
 	*	REL_RX : Context data (small)
 	*	REL_RY : Large Context Data (obviously large, 
 				it's a char * with an int declaring size,
-				so up to 32768)
+				so up to 32768 bytes)
 	*	REL_RZ	: Context Notification (wtf is this?)
 	*/
-    struct input_absinfo absinfo;
-    if (!ioctl(data_fd, EVIOCGABS(REL_RX), &absinfo)) {
+	ALOGE("SSPContextSensor: Set Initial State");
+    struct input_absinfo absinfox;
+    struct input_absinfo absinfoy;
+    struct input_absinfo absinfoz;
+    if (!ioctl(data_fd, EVIOCGABS(REL_RX), &absinfox) ||
+		!ioctl(data_fd, EVIOCGABS(REL_RY), &absinfoy) ||
+		!ioctl(data_fd, EVIOCGABS(REL_RZ), &absinfoz)) {
         // make sure to report an event immediately
+		ALOGE("SSPContextSensor: There were pending events!");
         mHasPendingEvent = true;
         //mPendingEvent.distance = indexToValue(absinfo.value);
-    }
+    } else{
+		ALOGE("SSPContextSensor: It seems there weren't pending events. Fuck it!, we'll do it anyway");
+		mHasPendingEvent = true;
+	}
     return 0;
 }
 
@@ -136,11 +152,42 @@ bool SSPContextSensor::hasPendingEvents() const {
     return mHasPendingEvent;
 }
 
+
+int SSPContextSensor::read_context_data(bool big, int size){
+	int ret = 0;
+	int fd = -1;
+	char data[256]; // data buffer. According to the kernel it tops at 256bytes
+	ALOGE("SSPContextSensor: Starting Read Context Data");
+	fd = SSPContextSensor::openDevice();
+	if (size > 255)
+		size = 255; // just in case...
+	if (fd>0){
+		switch (big){
+			case false:
+				ALOGE("SSPContextSensor:: We have small data pending");
+				ret = read(fd, &data, size);
+				ALOGE("SSPContextSensor:: **DEBUG** %s", data);
+				break;
+			case true:
+				ALOGE("SSPContextSensor: We have big data to parse!");
+				// We'll wait for this...
+				break;
+			default:
+				ALOGE("SSPContextSensor: Whoops, we hit the default case -readcontext-");
+				break;
+			}
+	ret = close(fd);
+	}else{
+		ALOGE("ERROR OPENING DEVICE!");
+	}
+	return 0;
+}
 int SSPContextSensor::readEvents(sensors_event_t* data, int count)
-{
+{ int ret = 0;
+
     if (count < 1)
         return -EINVAL;
-
+	ALOGW("SSPContextSensor: Read Events function called.");
     if (mHasPendingEvent) {
         mHasPendingEvent = false;
         mPendingEvent.timestamp = getTimestamp();
@@ -162,12 +209,15 @@ int SSPContextSensor::readEvents(sensors_event_t* data, int count)
 			switch (event->code){
 				case REL_RX: // Context Data
 					ALOGW("SSPContextSensor: REL_RX");
+					ret = SSPContextSensor::read_context_data(false, value);
 					break;
 				case REL_RY: // Large Context Data
 					ALOGW("SSPContextSensor: REL_RY");
+					ret = SSPContextSensor::read_context_data(true, value);
 					break;
 				case REL_RZ: // Context Notification
 					ALOGW("SSPContextSensor: REL_RZ");
+					// Should I do something with this? trigger something?
 					break;
 				default: // just in case so we know what came in
 					ALOGE("SSPContextSensor: Default case hit: Type: %i, Code %i", event->type, value);
@@ -193,5 +243,5 @@ int SSPContextSensor::readEvents(sensors_event_t* data, int count)
 float SSPContextSensor::indexToValue(size_t index) const
 {
     ALOGV("%s: Index = %zu",LOGTAG, index);
-    return index * PROXIMITY_THRESHOLD_CM;
+    return index;
 }

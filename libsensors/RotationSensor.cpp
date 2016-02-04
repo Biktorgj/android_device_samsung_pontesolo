@@ -152,19 +152,19 @@ again:
     while (count && mInputReader.readEvent(&event)) {
         int type = event->type;
         if (type == EV_REL) {
-			ALOGE("Rotation Vector: EV_REL - Code: %i", event->code);
+		//	ALOGE("Rotation Vector: EV_REL - Code: %i", value);
             float value = event->value;
             if (event->code == REL_X) {
-				ALOGE("Rotation Vector: REL_X %i", event->code);
+				ALOGE("Rotation Vector: REL_X %i", value);
                 mPendingEvent.data[0] = value;
             } else if (event->code == REL_Y) {
-				ALOGE("Rotation Vector: REL_Y %i", event->code);
+				ALOGE("Rotation Vector: REL_Y %i", value);
                 mPendingEvent.data[1] = value;
             } else if (event->code == REL_Z) {
-				ALOGE("Rotation Vector: REL_Z %i", event->code);
+				ALOGE("Rotation Vector: REL_Z %i", value);
                 mPendingEvent.data[2] = value;
             } else if (event->code == REL_RX){
-				ALOGE("Rotation Vector: REL_RX %i", event->code);
+				ALOGE("Rotation Vector: REL_RX %i", value);
 				mPendingEvent.data[3] = value;
 			}
 		/* If accuracy is bad, we should implement something here

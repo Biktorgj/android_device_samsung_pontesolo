@@ -38,7 +38,7 @@ LOCAL_SRC_FILES := 						\
                 AccelSensor.cpp         \
 				RotationSensor.cpp		\
                 PressureSensor.cpp		\
-				SSPContextSensor.cpp	\
+				StepCounterSensor.cpp	\
 				BioHRM.cpp
 
 LOCAL_SHARED_LIBRARIES := liblog libcutils libdl

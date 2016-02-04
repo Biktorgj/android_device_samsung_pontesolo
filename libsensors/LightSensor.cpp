@@ -61,8 +61,12 @@ LightSensor::~LightSensor() {
 
 int LightSensor::setInitialState() {
     struct input_absinfo absinfo;
-    if (!ioctl(data_fd, EVIOCGABS(EVENT_TYPE_LIGHT), &absinfo)) {
+	// Let's see if this stops leaving the lights off on poweron...
+    if (!ioctl(data_fd, EVIOCGABS(ABS_MISC), &absinfo)) {
         // make sure to report an event immediately
+        mHasPendingEvent = true;
+        mPendingEvent.light = absinfo.value;
+    }else if (!ioctl(data_fd, EVIOCGABS(REL_MISC), &absinfo)) {
         mHasPendingEvent = true;
         mPendingEvent.light = absinfo.value;
     }

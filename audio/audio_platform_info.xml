@@ -33,7 +33,7 @@
         <device name="SND_DEVICE_OUT_USB_HEADSET" acdb_id="98" />
 		<device name="SND_DEVICE_OUT_BT_SCO" acdb_id="22" />
         <device name="SND_DEVICE_OUT_BT_SCO_WB" acdb_id="50" />
-		<device name="SND_DEVICE_OUT_BT_SCO_RX" acdb_id="38"
+		<device name="SND_DEVICE_OUT_BT_SCO_RX" acdb_id="38" />
         <!-- Input devices -->
         <device name="SND_DEVICE_IN_HANDSET_DMIC" acdb_id="4" />
         <device name="SND_DEVICE_IN_SPEAKER_MIC" acdb_id="4" />

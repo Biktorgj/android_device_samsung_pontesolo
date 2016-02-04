@@ -20,8 +20,10 @@ TARGET_OTA_ASSERT_DEVICE := pontesolo,pontesolods,pontesolojv
 LOCAL_PATH := device/samsung/pontesolo
 
 # Audio -- We'll see if this is needed or not
-BOARD_HAVE_NEW_QCOM_CSDCLIENT := true
-AUDIO_FEATURE_LOW_LATENCY_PRIMARY := true
+# BOARD_HAVE_NEW_QCOM_CSDCLIENT := true
+# AUDIO_FEATURE_LOW_LATENCY_PRIMARY := true
+BOARD_USES_ALSA_AUDIO := true
+BOARD_USES_LEGACY_ALSA_AUDIO := true
 
 # Bluetooth
 BOARD_BLUEDROID_VENDOR_CONF := $(LOCAL_PATH)/bluetooth/vnd_pontesolo.txt

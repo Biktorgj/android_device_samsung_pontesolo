@@ -159,6 +159,17 @@ int SSPContextSensor::read_context_data(bool big, int size){
 	char data[256]; // data buffer. According to the kernel it tops at 256bytes
 	ALOGE("SSPContextSensor: Starting Read Context Data");
 	fd = SSPContextSensor::openDevice();
+	/*
+	* We send request commands to the mcu via /dev/ssp_sensorhub.
+	*  
+	* We send hex codes this way:
+	* __ <instruction
+	* 0xb1 0x32 0x00 <-- DATA
+	*	   ___ <sensortype
+	*
+	*	This will enable the HRM and put it to read :
+	*		\xb1\x2e\x02 > ssp_sensorhub
+	*/
 	if (size > 255)
 		size = 255; // just in case...
 	if (fd>0){

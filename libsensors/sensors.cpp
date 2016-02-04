@@ -39,7 +39,7 @@
 #include "AccelSensor.h"
 #include "PressureSensor.h"
 #include "RotationSensor.h"
-#include "SSPContextSensor.h"
+#include "StepCounterSensor.h"
 #include "BioHRM.h"
 
 /*****************************************************************************/
@@ -69,7 +69,7 @@
 #define SENSORS_PRESSURE_HANDLE         6
 #define SENSORS_ROTVECTOR_HANDLE		7
 #define SENSORS_BIOHRM_HANDLE			8
-#define SENSORS_SSPCONTEXT_HANDLE		9
+#define SENSORS_STEPCOUNTER_HANDLE		9
 
 /*
 	GEAR S:
@@ -134,9 +134,9 @@ static const struct sensor_t sSensorList[] = {
           1, SENSORS_BIOHRM_HANDLE,
           SENSOR_TYPE_HEART_RATE, 300.0f, 1.0f, 0.23f, 0, 0, 0, 
           SENSOR_STRING_TYPE_HEART_RATE, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },			  
-		 { "Seamless Sensor Platform",
+		 { "Step Counter Sensor",
           "Samsung Electronics Corporation",
-          1, SENSORS_SSPCONTEXT_HANDLE,
+          1, SENSORS_STEPCOUNTER_HANDLE,
           SENSOR_TYPE_STEP_COUNTER, 100.0f, 1.0f, 0.23f, 0, 0, 0, 
           SENSOR_STRING_TYPE_STEP_COUNTER, "", 0, SENSOR_FLAG_CONTINUOUS_MODE, { } },
 	};
@@ -193,7 +193,7 @@ private:
         pressure        = 4,
 		rotationvector  = 5,
 		biohrm			= 6,
-		contextsensor	= 7,
+		stepcountersensor	= 7,
         numSensorDrivers,
         numFds,
     };
@@ -224,7 +224,7 @@ private:
 			case ID_HRM:
 				return biohrm;
 			case ID_SSP:
-				return contextsensor;
+				return stepcountersensor;
         }
         return -EINVAL;
     }
@@ -269,10 +269,10 @@ sensors_poll_context_t::sensors_poll_context_t()
     mPollFds[biohrm].events = POLLIN;
     mPollFds[biohrm].revents = 0;
 	
-    mSensors[contextsensor] = new SSPContextSensor();
-    mPollFds[contextsensor].fd = mSensors[contextsensor]->getFd();
-    mPollFds[contextsensor].events = POLLIN;
-    mPollFds[contextsensor].revents = 0;
+    mSensors[stepcountersensor] = new StepCounterSensor();
+    mPollFds[stepcountersensor].fd = mSensors[stepcountersensor]->getFd();
+    mPollFds[stepcountersensor].events = POLLIN;
+    mPollFds[stepcountersensor].revents = 0;
 	
     int wakeFds[2];
     int result = pipe(wakeFds);

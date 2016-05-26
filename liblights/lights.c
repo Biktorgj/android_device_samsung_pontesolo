@@ -68,30 +68,7 @@ static int write_int(char const *path, int value)
         return -errno;
     }
 }
-/*
-static int write_str(char const *path, const char* value)
-{
-    int fd;
-    static int already_warned;
 
-    already_warned = 0;
-
-    ALOGV("write_str: path %s, value %s", path, value);
-    fd = open(path, O_RDWR);
-
-    if (fd >= 0) {
-        int amt = write(fd, value, strlen(value));
-        close(fd);
-        return amt == -1 ? -errno : 0;
-    } else {
-        if (already_warned == 0) {
-            ALOGE("write_str failed to open %s\n", path);
-            already_warned = 1;
-        }
-        return -errno;
-    }
-} 
-*/
 static int rgb_to_brightness(struct light_state_t const *state)
 {
     int color = state->color & 0x00ffffff;
@@ -104,16 +81,20 @@ static int set_light_backlight(struct light_device_t *dev,
             struct light_state_t const *state)
 {
     int err = 0;
+	int temp = 0;
     int brightness = rgb_to_brightness(state);
-
+	/* Android wear fix: Wear sends values from 0 to 255 and the 
+	display driver goes from 0 to 100 */
+	temp = brightness * 100 /255;
+	//ALOGE("Brightness setting called: %i base, %i total", brightness, temp);
     pthread_mutex_lock(&g_lock);
-    err = write_int(PANEL_FILE, brightness);
-	
+    err = write_int(PANEL_FILE, temp);
+	/*
 	if (brightness == 0)
 		err = write_int(TS_ENABLE, 0);
 	else
 		err = write_int(TS_ENABLE, 1);
-	
+	*/
     pthread_mutex_unlock(&g_lock);
     return err;
 }

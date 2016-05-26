@@ -32,8 +32,7 @@
         <device name="SND_DEVICE_OUT_VOICE_SPEAKER" acdb_id="15" />
         <device name="SND_DEVICE_OUT_USB_HEADSET" acdb_id="98" />
 		<device name="SND_DEVICE_OUT_BT_SCO" acdb_id="22" />
-        <device name="SND_DEVICE_OUT_BT_SCO_WB" acdb_id="50" />
-		<device name="SND_DEVICE_OUT_BT_SCO_RX" acdb_id="38" />
+
         <!-- Input devices -->
         <device name="SND_DEVICE_IN_HANDSET_DMIC" acdb_id="4" />
         <device name="SND_DEVICE_IN_SPEAKER_MIC" acdb_id="4" />
@@ -45,8 +44,7 @@
         <device name="SND_DEVICE_IN_VOIP_HANDSET_MIC" acdb_id="57" />
         <device name="SND_DEVICE_IN_VOIP_SPEAKER_MIC" acdb_id="64" />
 	    <device name="SND_DEVICE_IN_BT_SCO_MIC" acdb_id="21" />
-        <device name="SND_DEVICE_IN_BT_SCO_MIC_WB" acdb_id="51" />
-		<device name="SND_DEVICE_IN_BT_SCO_TX" acdb_id="39" />
+
     </acdb_ids>
 
     <backend_names>
@@ -55,6 +53,8 @@
 
     <pcm_ids>
         <!-- empty -->
+		<usecase name="USECASE_VOICE_CALL" type="in" id="2"/>
+        <usecase name="USECASE_VOICE_CALL" type="out" id="2"/>
     </pcm_ids>
 
     <device_names>
@@ -66,7 +66,7 @@
         <device name="SND_DEVICE_OUT_VOICE_TTY_FULL_HEADPHONES" alias="TTY-full" />
         <device name="SND_DEVICE_OUT_VOICE_TTY_VCO_HEADPHONES" alias="TTY-headset" />
         <device name="SND_DEVICE_OUT_VOICE_TTY_HCO_HANDSET" alias="TTY-handset" />
-
+		<device name="SND_DEVICE_OUT_BT_SCO" alias="bt-sco-headset" />
         <!-- Input devices -->
         <device name="SND_DEVICE_IN_HANDSET_MIC" alias="rec-main-mic" />
         <device name="SND_DEVICE_IN_HANDSET_DMIC" alias="voice-call-main-mic" />
@@ -89,12 +89,12 @@
         <device name="SND_DEVICE_IN_VOICE_TTY_VCO_HANDSET_MIC" alias="TTY-vco-mic" />
         <device name="SND_DEVICE_IN_VOICE_TTY_HCO_HEADSET_MIC" alias="TTY-headset-mic" />
         <device name="SND_DEVICE_IN_VOICE_REC_MIC" alias="vr-main-mic" />
-        <device name="SND_DEVICE_IN_VOICE_REC_HEADSET_MIC" alias="vr-headset-mic" />
         <device name="SND_DEVICE_IN_VOICE_REC_MIC_NS" alias="svoice-NS-mic" />
         <device name="SND_DEVICE_IN_VOICE_REC_DMIC_STEREO" alias="vr-main-mic" />
         <device name="SND_DEVICE_IN_HANDSET_STEREO_DMIC" alias="rec-stereo-mic" />
         <device name="SND_DEVICE_IN_SPEAKER_STEREO_DMIC" alias="rec-stereo-mic" />
         <device name="SND_DEVICE_IN_VOIP_SPEAKER_MIC" alias="voip-main-mic-others" />
+		<device name="SND_DEVICE_IN_BT_SCO_MIC" alias="bt-sco-mic" />
     </device_names>
 
 </audio_platform_info>
